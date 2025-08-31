@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit",
+    "test:run": "echo 'No tests configured'"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.10",
