@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kingdom Builder - Majesty Inspired</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Top UI Bar -->
+        <div class="top-bar">
+            <div class="stat-display">
+                <div class="stat-item">
+                    <span class="stat-icon">💰</span>
+                    <span class="stat-label">Gold:</span>
+                    <span id="gold-amount">500</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">👥</span>
+                    <span class="stat-label">Heroes:</span>
+                    <span id="hero-count">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">🏠</span>
+                    <span class="stat-label">Population:</span>
+                    <span id="population">1</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">⚔️</span>
+                    <span class="stat-label">Enemies:</span>
+                    <span id="enemy-count">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Left Sidebar - Building Menu -->
+            <div class="left-sidebar">
+                <h3>Buildings</h3>
+                <div class="building-menu">
+                    <div class="building-category">
+                        <h4>Guilds</h4>
+                        <div class="building-list">
+                            <button class="building-btn" data-type="warriorGuild">
+                                <span class="building-icon">⚔️</span>
+                                <span class="building-name">Warrior Guild</span>
+                                <span class="building-cost">100g</span>
+                            </button>
+                            <button class="building-btn" data-type="rangerGuild">
+                                <span class="building-icon">🏹</span>
+                                <span class="building-name">Ranger Guild</span>
+                                <span class="building-cost">120g</span>
+                            </button>
+                            <button class="building-btn" data-type="wizardGuild">
+                                <span class="building-icon">🔮</span>
+                                <span class="building-name">Wizard Guild</span>
+                                <span class="building-cost">150g</span>
+                            </button>
+                            <button class="building-btn" data-type="rogueGuild">
+                                <span class="building-icon">🗡️</span>
+                                <span class="building-name">Rogue Guild</span>
+                                <span class="building-cost">80g</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="building-category">
+                        <h4>Economy</h4>
+                        <div class="building-list">
+                            <button class="building-btn" data-type="marketplace">
+                                <span class="building-icon">🏪</span>
+                                <span class="building-name">Marketplace</span>
+                                <span class="building-cost">60g</span>
+                            </button>
+                            <button class="building-btn" data-type="blacksmith">
+                                <span class="building-icon">🔨</span>
+                                <span class="building-name">Blacksmith</span>
+                                <span class="building-cost">80g</span>
+                            </button>
+                            <button class="building-btn" data-type="inn">
+                                <span class="building-icon">🍺</span>
+                                <span class="building-name">Inn</span>
+                                <span class="building-cost">50g</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="building-category">
+                        <h4>Defense</h4>
+                        <div class="building-list">
+                            <button class="building-btn" data-type="guardTower">
+                                <span class="building-icon">🗼</span>
+                                <span class="building-name">Guard Tower</span>
+                                <span class="building-cost">40g</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Grid -->
+            <div class="game-area">
+                <div class="grid-container">
+                    <div id="game-grid" class="game-grid"></div>
+                </div>
+                
+                <!-- Flag Placement Tools -->
+                <div class="flag-controls">
+                    <h4>Place Reward Flags</h4>
+                    <div class="flag-buttons">
+                        <button class="flag-btn" data-type="attack">
+                            <span class="flag-icon">⚔️</span>
+                            <span class="flag-name">Attack</span>
+                            <span class="flag-cost">50g</span>
+                        </button>
+                        <button class="flag-btn" data-type="explore">
+                            <span class="flag-icon">🔍</span>
+                            <span class="flag-name">Explore</span>
+                            <span class="flag-cost">30g</span>
+                        </button>
+                        <button class="flag-btn" data-type="defend">
+                            <span class="flag-icon">🛡️</span>
+                            <span class="flag-name">Defend</span>
+                            <span class="flag-cost">40g</span>
+                        </button>
+                        <button class="flag-btn cancel-btn">
+                            <span class="flag-icon">❌</span>
+                            <span class="flag-name">Cancel</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar - Info Panel -->
+            <div class="right-sidebar">
+                <div class="info-panel">
+                    <h3>Information</h3>
+                    <div id="selected-info" class="selected-info">
+                        <p>Click on a building, hero, or enemy to see details</p>
+                    </div>
+                </div>
+
+                <!-- Hero List -->
+                <div class="hero-panel">
+                    <h3>Active Heroes</h3>
+                    <div id="hero-list" class="hero-list">
+                        <p class="empty-message">No heroes recruited yet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Status Messages -->
+        <div id="game-messages" class="game-messages"></div>
+
+        <!-- Modal for Game Over -->
+        <div id="game-over-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2>Game Over!</h2>
+                <p id="game-over-message"></p>
+                <button id="restart-btn" class="btn btn--primary">Start New Kingdom</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
