@@ -32,7 +32,6 @@ This document outlines potential improvements and new features for the Empire Bu
   - Visual combat feedback
   - Particle effects for spells and attacks
   - Combat camera system
-  - Sound effects for different combat types
 
 ### Resource Management
 - **Advanced Economy**
@@ -61,19 +60,6 @@ This document outlines potential improvements and new features for the Empire Bu
   - Building production graphs
   - Kingdom overview dashboard
   - Real-time notifications system
-
-### Visual Enhancements
-- **Art & Graphics**
-  - High-quality sprites and animations
-  - Weather effects and day/night cycle
-  - Particle systems for magic and combat
-  - Customizable kingdom themes
-
-- **Audio Experience**
-  - Dynamic background music
-  - Contextual sound effects
-  - Voice acting for heroes
-  - Audio settings and volume controls
 
 ## ⚔️ New Game Mechanics
 
@@ -261,13 +247,9 @@ This document outlines potential improvements and new features for the Empire Bu
 2. Quest system
 3. Advanced AI
 4. Visual enhancements
-5. Audio improvements
 
 ### Low Priority (Advanced Features)
-1. Multiplayer functionality
 2. Procedural generation
-3. Modding support
-4. Cross-platform deployment
 5. Advanced analytics
 
 ## 🔧 Technical Debt & Refactoring

@@ -2,9 +2,10 @@ import React from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { useUIStore } from '../../stores/uiStore';
 import { BUILDING_TYPES } from '../../data/gameData';
+import type { ResourceCost } from '../../types/game';
 
 const LeftSidebar: React.FC = () => {
-  const { gold, spawnHero } = useGameStore();
+  const { spawnHero, canAfford } = useGameStore();
   const { selectedBuildingType, selectBuildingType, addGameMessage } = useUIStore();
 
   const handleBuildingClick = (type: string) => {
@@ -15,10 +16,19 @@ const LeftSidebar: React.FC = () => {
   const handleSpawnHero = (guildType: string) => {
     const hero = spawnHero(guildType);
     if (hero) {
-      addGameMessage(`Recruited ${hero.name}!`, 'success');
+      addGameMessage(`Recruited ${hero.heroName}!`, 'success');
     } else {
       addGameMessage('Cannot recruit hero - no available guild!', 'error');
     }
+  };
+
+  const formatCost = (cost: ResourceCost) => {
+    const parts = [];
+    if (cost.gold) parts.push(`${cost.gold}g`);
+    if (cost.mana) parts.push(`${cost.mana}m`);
+    if (cost.supplies) parts.push(`${cost.supplies}s`);
+    if (cost.population) parts.push(`${cost.population}p`);
+    return parts.join(' ');
   };
 
   const buildingCategories = [
@@ -46,34 +56,38 @@ const LeftSidebar: React.FC = () => {
             <div className="building-list space-y-2">
               {category.buildings.map((buildingType) => {
                 const building = BUILDING_TYPES[buildingType];
-                const canAfford = gold >= building.cost;
+                const canAffordBuilding = canAfford(building.cost);
                 const isSelected = selectedBuildingType === buildingType;
 
                 return (
-                  <div key={buildingType} className="flex items-center justify-between">
+                  <div key={buildingType} className="building-item space-y-2">
                     <button
-                      className={`building-btn flex-1 flex items-center gap-2 p-2 rounded border transition-colors ${
+                      className={`building-btn w-full flex items-center gap-2 p-3 rounded border transition-colors ${
                         isSelected
                           ? 'bg-blue-100 border-blue-500 text-blue-700'
-                          : canAfford
+                          : canAffordBuilding
                             ? 'bg-white border-gray-300 hover:bg-gray-50 text-gray-700'
                             : 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
                       }`}
                       onClick={() => handleBuildingClick(buildingType)}
-                      disabled={!canAfford}
+                      disabled={!canAffordBuilding}
                     >
-                      <span className="building-icon text-lg">{building.symbol}</span>
-                      <span className="building-name text-sm">{building.name}</span>
-                      <span className={`building-cost text-xs ml-auto ${canAfford ? 'text-green-600' : 'text-red-500'}`}>
-                        {building.cost}g
-                      </span>
+                      <span className="building-icon text-2xl">{building.symbol}</span>
+                      <div className="flex-1 text-left">
+                        <div className="building-name text-sm font-medium">{building.name}</div>
+                        <div className={`building-cost text-xs ${
+                          canAffordBuilding ? 'text-green-600' : 'text-red-500'
+                        }`}>
+                          Cost: {formatCost(building.cost)}
+                        </div>
+                      </div>
                     </button>
                     {buildingType.includes('Guild') && (
                       <button
-                        className="ml-2 px-2 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition-colors"
+                        className="w-full px-3 py-1 bg-purple-500 text-white text-sm rounded hover:bg-purple-600 transition-colors"
                         onClick={() => handleSpawnHero(buildingType)}
                       >
-                        Recruit
+                        🦸 Recruit Hero
                       </button>
                     )}
                   </div>
