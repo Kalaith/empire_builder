@@ -384,22 +384,23 @@ export const useGameLoop = () => {
 
     } else if (bestTarget && (shouldBeAggressive || bestTargetScore > 15)) {
       // Engage in combat
-      const distance = Math.abs(hero.x - bestTarget.x) + Math.abs(hero.y - bestTarget.y);
+      const target = bestTarget as Enemy;
+      const distance = Math.abs(hero.x - target.x) + Math.abs(hero.y - target.y);
 
       if (distance === 1) {
         // Adjacent - attack
-        resolveCombat(hero, bestTarget);
-        hero.lastAction = `attacking ${bestTarget.name}`;
+        resolveCombat(hero, target);
+        hero.lastAction = `attacking ${target.name}`;
       } else {
         // Move strategically towards enemy
         let moveSuccess = false;
 
         // Try to move to advantageous position
         const possiblePositions = [
-          { x: bestTarget.x + 1, y: bestTarget.y },
-          { x: bestTarget.x - 1, y: bestTarget.y },
-          { x: bestTarget.x, y: bestTarget.y + 1 },
-          { x: bestTarget.x, y: bestTarget.y - 1 }
+          { x: target.x + 1, y: target.y },
+          { x: target.x - 1, y: target.y },
+          { x: target.x, y: target.y + 1 },
+          { x: target.x, y: target.y - 1 }
         ].filter(pos =>
           pos.x >= 0 && pos.x < gridWidth &&
           pos.y >= 0 && pos.y < gridHeight &&
@@ -433,9 +434,9 @@ export const useGameLoop = () => {
         }
 
         if (!moveSuccess) {
-          moveHeroTowards(hero, bestTarget.x, bestTarget.y);
+          moveHeroTowards(hero, target.x, target.y);
         }
-        hero.lastAction = `pursuing ${bestTarget.name}`;
+        hero.lastAction = `pursuing ${target.name}`;
       }
 
     } else if (targetFlag && bestFlagScore > 10) {

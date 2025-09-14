@@ -10,6 +10,7 @@ export interface ResourceProduction {
   gold?: number;
   mana?: number;
   supplies?: number;
+  population?: number;
 }
 
 export interface BuildingUpgrade {

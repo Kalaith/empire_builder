@@ -163,6 +163,11 @@ export const useGameStore = create<GameStore>()(
           type: 'castle',
           x: centerX,
           y: centerY,
+          level: 1,
+          isProducing: false,
+          productionCooldown: 0,
+          healthPoints: 100,
+          maxHealthPoints: 100,
           ...BUILDING_TYPES.castle
         };
 
@@ -494,7 +499,7 @@ export const useGameStore = create<GameStore>()(
 
             const relationship: HeroRelationship = {
               heroId: heroId2,
-              relationshipType: type,
+              relationshipType: type as 'friendship' | 'rivalry' | 'romance',
               strength: 10,
               history: [`Met ${heroId2}`]
             };
@@ -590,7 +595,7 @@ export const useGameStore = create<GameStore>()(
       placeFlag: (type: string, x: number, y: number) => {
         const state = get();
         if (x < 0 || x >= state.gridWidth || y < 0 || y >= state.gridHeight) return null;
-        if (state.gold < FLAG_TYPES[type].baseCost) return null;
+        if (state.resources.gold < FLAG_TYPES[type].baseCost) return null;
         if (state.grid[y][x].flag || state.grid[y][x].building) return null;
 
         const flagData = FLAG_TYPES[type];
@@ -612,7 +617,10 @@ export const useGameStore = create<GameStore>()(
         set({
           flags: newFlags,
           grid: newGrid,
-          gold: state.gold - flagData.baseCost
+          resources: {
+            ...state.resources,
+            gold: state.resources.gold - flagData.baseCost
+          }
         });
 
         return flag;
@@ -967,7 +975,7 @@ export const useGameStore = create<GameStore>()(
     {
       name: 'empire-builder-game',
       partialize: (state) => ({
-        gold: state.gold,
+        resources: state.resources,
         buildings: state.buildings,
         heroes: state.heroes,
         flags: state.flags,

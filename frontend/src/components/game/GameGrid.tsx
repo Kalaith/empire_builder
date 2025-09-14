@@ -5,7 +5,7 @@ import { FLAG_TYPES } from '../../data/gameData';
 import type { GridCell } from '../../types/game';
 
 const GameGrid: React.FC = () => {
-  const { grid, gridWidth, gridHeight, placeBuilding, placeFlag, gold } = useGameStore();
+  const { grid, gridWidth, gridHeight, placeBuilding, placeFlag, resources } = useGameStore();
   const { selectedBuildingType, selectedFlagType, selectFlagType, cancelSelection, selectEntity, addGameMessage } = useUIStore();
 
   const handleCellClick = (x: number, y: number) => {
@@ -86,7 +86,7 @@ const GameGrid: React.FC = () => {
         <h4 className="text-md font-bold mb-3 text-gray-800">Place Reward Flags</h4>
         <div className="flag-buttons flex gap-2 flex-wrap">
           {Object.entries(FLAG_TYPES).map(([type, flag]) => {
-            const canAfford = gold >= flag.baseCost;
+            const canAfford = resources.gold >= flag.baseCost;
             const isSelected = selectedFlagType === type;
 
             return (
