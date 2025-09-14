@@ -7,6 +7,7 @@ interface UIState {
   selectedEntity: { entity: Building | Hero | Enemy | Flag; type: string } | null;
   showGameOverModal: boolean;
   gameMessages: Array<{ id: string; text: string; type: 'success' | 'error' | 'info' }>;
+  messageIdCounter: number;
 }
 
 interface UIActions {
@@ -29,6 +30,7 @@ export const useUIStore = create<UIStore>((set, get) => ({
   selectedEntity: null,
   showGameOverModal: false,
   gameMessages: [],
+  messageIdCounter: 0,
 
   // Actions
   selectBuildingType: (type) => {
@@ -63,10 +65,12 @@ export const useUIStore = create<UIStore>((set, get) => ({
   },
 
   addGameMessage: (text, type = 'info') => {
-    const id = Date.now().toString();
+    const state = get();
+    const id = `${Date.now()}-${state.messageIdCounter}`;
     const message = { id, text, type };
-    set((state) => ({
-      gameMessages: [...state.gameMessages, message]
+    set((prevState) => ({
+      gameMessages: [...prevState.gameMessages, message],
+      messageIdCounter: prevState.messageIdCounter + 1
     }));
 
     // Auto-remove message after 4 seconds
