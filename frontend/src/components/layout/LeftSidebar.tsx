@@ -5,7 +5,15 @@ import { BUILDING_TYPES } from '../../data/gameData';
 import type { ResourceCost } from '../../types/game';
 
 const LeftSidebar: React.FC = () => {
-  const { spawnHero, canAfford } = useGameStore();
+  const { 
+    spawnHero, 
+    canAfford, 
+    getHeroRecruitmentCost, 
+    canRecruitHero, 
+    getGuildCapacity,
+    getBuildingCost,
+    buildings 
+  } = useGameStore();
   const { selectedBuildingType, selectBuildingType, addGameMessage } = useUIStore();
 
   const handleBuildingClick = (type: string) => {
@@ -14,11 +22,17 @@ const LeftSidebar: React.FC = () => {
   };
 
   const handleSpawnHero = (guildType: string) => {
+    const recruitmentCheck = canRecruitHero(guildType);
+    if (!recruitmentCheck.canRecruit) {
+      addGameMessage(`Cannot recruit hero: ${recruitmentCheck.reason}`, 'error');
+      return;
+    }
+
     const hero = spawnHero(guildType);
     if (hero) {
       addGameMessage(`Recruited ${hero.heroName}!`, 'success');
     } else {
-      addGameMessage('Cannot recruit hero - no available guild!', 'error');
+      addGameMessage('Failed to recruit hero!', 'error');
     }
   };
 
@@ -56,7 +70,8 @@ const LeftSidebar: React.FC = () => {
             <div className="building-list space-y-2">
               {category.buildings.map((buildingType) => {
                 const building = BUILDING_TYPES[buildingType];
-                const canAffordBuilding = canAfford(building.cost);
+                const actualCost = getBuildingCost(buildingType);
+                const canAffordBuilding = canAfford(actualCost);
                 const isSelected = selectedBuildingType === buildingType;
 
                 return (
@@ -78,18 +93,50 @@ const LeftSidebar: React.FC = () => {
                         <div className={`building-cost text-xs ${
                           canAffordBuilding ? 'text-green-600' : 'text-red-500'
                         }`}>
-                          Cost: {formatCost(building.cost)}
+                          Cost: {formatCost(actualCost)}
                         </div>
                       </div>
                     </button>
-                    {buildingType.includes('Guild') && (
-                      <button
-                        className="w-full px-3 py-1 bg-purple-500 text-white text-sm rounded hover:bg-purple-600 transition-colors"
-                        onClick={() => handleSpawnHero(buildingType)}
-                      >
-                        🦸 Recruit Hero
-                      </button>
-                    )}
+                    {buildingType.includes('Guild') && (() => {
+                      const heroType = buildingType.replace('Guild', '').toLowerCase();
+                      const heroCost = getHeroRecruitmentCost(heroType);
+                      const recruitmentCheck = canRecruitHero(buildingType);
+                      const guild = buildings.find(b => b.type === buildingType);
+                      const capacity = guild ? getGuildCapacity(guild.id) : { current: 0, max: 0 };
+                      const isBuilt = !!guild;
+                      
+                      return (
+                        <div className="space-y-1">
+                          <button
+                            className={`w-full px-3 py-2 text-sm rounded transition-colors ${
+                              recruitmentCheck.canRecruit && isBuilt
+                                ? 'bg-purple-500 text-white hover:bg-purple-600'
+                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            }`}
+                            onClick={() => handleSpawnHero(buildingType)}
+                            disabled={!recruitmentCheck.canRecruit || !isBuilt}
+                            title={recruitmentCheck.canRecruit ? '' : recruitmentCheck.reason}
+                          >
+                            🦸 Recruit Hero
+                          </button>
+                          <div className="text-xs text-gray-600 space-y-1">
+                            <div className={`${canAfford(heroCost) ? 'text-green-600' : 'text-red-500'}`}>
+                              Cost: {formatCost(heroCost)}
+                            </div>
+                            {isBuilt && (
+                              <div className="text-blue-600">
+                                Capacity: {capacity.current}/{capacity.max}
+                              </div>
+                            )}
+                            {!isBuilt && (
+                              <div className="text-gray-500">
+                                Build guild first
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
                 );
               })}

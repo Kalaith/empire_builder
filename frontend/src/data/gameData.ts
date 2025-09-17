@@ -37,7 +37,8 @@ export const BUILDING_TYPES: Record<string, BuildingType> = {
     color: "#FF6B6B",
     symbol: "⚔️",
     description: "Trains mighty warriors to defend your kingdom",
-    prerequisites: []
+    prerequisites: [],
+    heroCapacity: 3
   },
   rangerGuild: {
     name: "Ranger Guild",
@@ -51,7 +52,8 @@ export const BUILDING_TYPES: Record<string, BuildingType> = {
     color: "#4ECDC4",
     symbol: "🏹",
     description: "Trains skilled rangers for exploration and ranged combat",
-    prerequisites: []
+    prerequisites: [],
+    heroCapacity: 4
   },
   wizardGuild: {
     name: "Wizard Guild",
@@ -65,7 +67,8 @@ export const BUILDING_TYPES: Record<string, BuildingType> = {
     color: "#45B7D1",
     symbol: "🔮",
     description: "Trains powerful wizards and generates mana",
-    prerequisites: []
+    prerequisites: [],
+    heroCapacity: 2
   },
   rogueGuild: {
     name: "Rogue Guild",
@@ -79,7 +82,8 @@ export const BUILDING_TYPES: Record<string, BuildingType> = {
     color: "#96CEB4",
     symbol: "🗡️",
     description: "Trains stealthy rogues who bring in extra gold",
-    prerequisites: []
+    prerequisites: [],
+    heroCapacity: 4
   },
   marketplace: {
     name: "Marketplace",
@@ -149,7 +153,8 @@ export const HERO_CLASSES: Record<string, HeroClass> = {
     symbol: "🛡️",
     preferences: ["attack", "defend"],
     specializations: ["guardian", "berserker", "paladin"],
-    description: "Heavily armored fighters who excel in direct combat"
+    description: "Heavily armored fighters who excel in direct combat",
+    baseCost: { gold: 100 }
   },
   ranger: {
     name: "Ranger",
@@ -160,7 +165,8 @@ export const HERO_CLASSES: Record<string, HeroClass> = {
     symbol: "🏹",
     preferences: ["explore", "attack"],
     specializations: ["scout", "hunter", "beastmaster"],
-    description: "Swift archers skilled in ranged combat and exploration"
+    description: "Swift archers skilled in ranged combat and exploration",
+    baseCost: { gold: 120 }
   },
   wizard: {
     name: "Wizard",
@@ -171,7 +177,8 @@ export const HERO_CLASSES: Record<string, HeroClass> = {
     symbol: "🔮",
     preferences: ["attack", "explore"],
     specializations: ["elementalist", "necromancer", "enchanter"],
-    description: "Masters of arcane magic with devastating spells"
+    description: "Masters of arcane magic with devastating spells",
+    baseCost: { gold: 150 }
   },
   rogue: {
     name: "Rogue",
@@ -182,7 +189,8 @@ export const HERO_CLASSES: Record<string, HeroClass> = {
     symbol: "🗡️",
     preferences: ["gold", "explore"],
     specializations: ["assassin", "thief", "shadowdancer"],
-    description: "Stealthy operatives who strike from the shadows"
+    description: "Stealthy operatives who strike from the shadows",
+    baseCost: { gold: 80 }
   }
 };
 

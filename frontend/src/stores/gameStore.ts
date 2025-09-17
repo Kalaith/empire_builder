@@ -28,6 +28,29 @@ import {
   GAME_CONFIG
 } from '../data/gameData';
 
+// Helper functions for cost scaling
+const calculateHeroRecruitmentCost = (baseCost: ResourceCost, existingHeroCount: number): ResourceCost => {
+  // Scale cost by 1.5x for each existing hero of any type
+  const multiplier = Math.pow(1.5, existingHeroCount);
+  return {
+    gold: baseCost.gold ? Math.floor(baseCost.gold * multiplier) : undefined,
+    mana: baseCost.mana ? Math.floor(baseCost.mana * multiplier) : undefined,
+    supplies: baseCost.supplies ? Math.floor(baseCost.supplies * multiplier) : undefined,
+    population: baseCost.population
+  };
+};
+
+const calculateBuildingCost = (baseCost: ResourceCost, existingBuildingCount: number): ResourceCost => {
+  // Scale building cost by 1.25x for each existing building of the same type
+  const multiplier = Math.pow(1.25, existingBuildingCount);
+  return {
+    gold: baseCost.gold ? Math.floor(baseCost.gold * multiplier) : undefined,
+    mana: baseCost.mana ? Math.floor(baseCost.mana * multiplier) : undefined,
+    supplies: baseCost.supplies ? Math.floor(baseCost.supplies * multiplier) : undefined,
+    population: baseCost.population
+  };
+};
+
 interface GameStore extends GameState {
   // Core Actions
   initializeGrid: () => void;
@@ -59,6 +82,12 @@ interface GameStore extends GameState {
   canAfford: (cost: ResourceCost) => boolean;
   spendResources: (cost: ResourceCost) => boolean;
   addResources: (resources: Partial<Resources>) => void;
+  
+  // Hero Cost and Capacity Management
+  getHeroRecruitmentCost: (heroType: string) => ResourceCost;
+  canRecruitHero: (guildType: string) => { canRecruit: boolean; reason?: string };
+  getGuildCapacity: (guildId: string) => { current: number; max: number };
+  getBuildingCost: (buildingType: string) => ResourceCost;
 
   // Quest System
   startQuest: (questId: string, heroId?: string) => boolean;
@@ -236,7 +265,10 @@ export const useGameStore = create<GameStore>()(
         if (!state.canPlaceBuilding(x, y)) return null;
 
         const buildingData = BUILDING_TYPES[type];
-        if (!state.canAfford(buildingData.cost)) return null;
+        const existingBuildingsOfType = state.buildings.filter(b => b.type === type).length;
+        const scaledCost = calculateBuildingCost(buildingData.cost, existingBuildingsOfType);
+        
+        if (!state.canAfford(scaledCost)) return null;
 
         const building: Building = {
           id: `building_${Date.now()}`,
@@ -245,17 +277,19 @@ export const useGameStore = create<GameStore>()(
           y,
           level: 1,
           name: buildingData.name,
-          cost: buildingData.cost,
+          cost: scaledCost,
           production: buildingData.production,
           isProducing: false,
           productionCooldown: 0,
           color: buildingData.color,
           symbol: buildingData.symbol,
           healthPoints: 100,
-          maxHealthPoints: 100
+          maxHealthPoints: 100,
+          heroCapacity: buildingData.heroCapacity,
+          heroCount: buildingData.heroCapacity ? 0 : undefined
         };
 
-        state.spendResources(buildingData.cost);
+        state.spendResources(scaledCost);
 
         const newBuildings = [...state.buildings, building];
         const newGrid = [...state.grid];
@@ -317,13 +351,76 @@ export const useGameStore = create<GameStore>()(
         return true;
       },
 
+      // Hero Cost and Capacity Management
+      getHeroRecruitmentCost: (heroType: string) => {
+        const state = get();
+        const heroClass = HERO_CLASSES[heroType];
+        if (!heroClass) return { gold: 0 };
+        
+        const existingHeroCount = state.heroes.length;
+        return calculateHeroRecruitmentCost(heroClass.baseCost, existingHeroCount);
+      },
+
+      canRecruitHero: (guildType: string) => {
+        const state = get();
+        const guild = state.buildings.find(b => b.type === guildType);
+        
+        if (!guild) {
+          return { canRecruit: false, reason: 'No guild found' };
+        }
+        
+        if (!guild.heroCapacity) {
+          return { canRecruit: false, reason: 'Not a guild building' };
+        }
+        
+        const currentHeroCount = guild.heroCount || 0;
+        if (currentHeroCount >= guild.heroCapacity) {
+          return { canRecruit: false, reason: `Guild at capacity (${currentHeroCount}/${guild.heroCapacity})` };
+        }
+        
+        const heroType = guildType.replace('Guild', '').toLowerCase();
+        const recruitmentCost = state.getHeroRecruitmentCost(heroType);
+        
+        if (!state.canAfford(recruitmentCost)) {
+          return { canRecruit: false, reason: 'Insufficient resources' };
+        }
+        
+        return { canRecruit: true };
+      },
+
+      getGuildCapacity: (guildId: string) => {
+        const state = get();
+        const guild = state.buildings.find(b => b.id === guildId);
+        return {
+          current: guild?.heroCount || 0,
+          max: guild?.heroCapacity || 0
+        };
+      },
+
+      getBuildingCost: (buildingType: string) => {
+        const state = get();
+        const buildingData = BUILDING_TYPES[buildingType];
+        if (!buildingData) return { gold: 0 };
+        
+        const existingBuildingsOfType = state.buildings.filter(b => b.type === buildingType).length;
+        return calculateBuildingCost(buildingData.cost, existingBuildingsOfType);
+      },
+
       spawnHero: (guildType: string) => {
         const state = get();
         const heroType = guildType.replace('Guild', '').toLowerCase();
         const guild = state.buildings.find(b => b.type === guildType);
         if (!guild || !HERO_CLASSES[heroType]) return null;
+        
+        // Check if hero can be recruited
+        const recruitmentCheck = state.canRecruitHero(guildType);
+        if (!recruitmentCheck.canRecruit) return null;
 
         const heroClass = HERO_CLASSES[heroType];
+        const recruitmentCost = state.getHeroRecruitmentCost(heroType);
+        
+        // Spend the recruitment cost
+        if (!state.spendResources(recruitmentCost)) return null;
         const hero: Hero = {
           id: `hero_${state.nextHeroId}`,
           type: heroType,
@@ -361,9 +458,25 @@ export const useGameStore = create<GameStore>()(
         const newGrid = [...state.grid];
         newGrid[hero.y][hero.x].hero = hero;
 
+        // Update guild hero count
+        const updatedBuildings = state.buildings.map(b => {
+          if (b.id === guild.id) {
+            return {
+              ...b,
+              heroCount: (b.heroCount || 0) + 1
+            };
+          }
+          return b;
+        });
+
+        // Update building in grid
+        const updatedGrid = [...newGrid];
+        updatedGrid[guild.y][guild.x].building = updatedBuildings.find(b => b.id === guild.id);
+
         set({
           heroes: newHeroes,
-          grid: newGrid,
+          grid: updatedGrid,
+          buildings: updatedBuildings,
           nextHeroId: state.nextHeroId + 1
         });
 
@@ -692,9 +805,28 @@ export const useGameStore = create<GameStore>()(
         const newGrid = [...state.grid];
         newGrid[hero.y][hero.x].hero = undefined;
 
+        // Find the guild that recruited this hero and decrement its count
+        const guildType = `${hero.type}Guild`;
+        const updatedBuildings = state.buildings.map(b => {
+          if (b.type === guildType && b.heroCount && b.heroCount > 0) {
+            return {
+              ...b,
+              heroCount: b.heroCount - 1
+            };
+          }
+          return b;
+        });
+
+        // Update building in grid if found
+        const guild = updatedBuildings.find(b => b.type === guildType);
+        if (guild) {
+          newGrid[guild.y][guild.x].building = guild;
+        }
+
         set({
           heroes: newHeroes,
-          grid: newGrid
+          grid: newGrid,
+          buildings: updatedBuildings
         });
       },
 
