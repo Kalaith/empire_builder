@@ -33,6 +33,7 @@ export interface BuildingType {
   symbol: string;
   description: string;
   prerequisites?: string[];
+  heroCapacity?: number; // For guild buildings
 }
 
 export interface HeroClass {
@@ -45,6 +46,7 @@ export interface HeroClass {
   preferences: string[];
   specializations: string[];
   description: string;
+  baseCost: ResourceCost;
 }
 
 export interface FlagType {
@@ -79,6 +81,8 @@ export interface Building {
   symbol: string;
   healthPoints: number;
   maxHealthPoints: number;
+  heroCapacity?: number; // For guild buildings
+  heroCount?: number; // Current heroes recruited from this guild
 }
 
 export interface HeroSpecialization {
