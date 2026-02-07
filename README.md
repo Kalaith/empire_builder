@@ -178,6 +178,10 @@ The built files will be in the `dist/` directory.
 - Built with modern web technologies
 - Special thanks to the open-source community
 
----
+## License
+
+This project is licensed under the MIT License - see the individual component README files for details.
 
 **Enjoy building your empire! 🏰**
+
+Part of the WebHatchery game collection.
