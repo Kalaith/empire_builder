@@ -1,3 +1,4 @@
+
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type {
@@ -22,6 +23,7 @@ import {
   heroClasses,
   heroSpecializations,
   flagTypes,
+  enemyTypes,
   sampleQuests,
   sampleAchievements,
   gameConfig
@@ -648,8 +650,8 @@ export const useGameStore = create<GameStore>()(
 
       spawnEnemy: () => {
         const state = get();
-        const enemyTypes = Object.keys(enemyTypes);
-        const type = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+        const enemyTypeKeys = Object.keys(enemyTypes);
+        const type = enemyTypeKeys[Math.floor(Math.random() * enemyTypeKeys.length)];
 
         // Spawn at random edge
         let x: number, y: number;
@@ -1117,3 +1119,4 @@ export const useGameStore = create<GameStore>()(
     }
   )
 );
+
