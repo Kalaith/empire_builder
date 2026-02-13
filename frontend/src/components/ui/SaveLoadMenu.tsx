@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import type { SaveSlot } from '../../types/game';
 import { useGameStore } from '../../stores/gameStore';
-import { GAME_CONFIG } from '../../data/gameData';
+import { gameConfig } from '../../data/gameData';
 
 interface SaveLoadMenuProps {
   isOpen: boolean;
@@ -59,7 +59,7 @@ const SaveLoadMenu: React.FC<SaveLoadMenuProps> = ({ isOpen, onClose, mode }) =>
   const getEmptySlots = () => {
     const usedSlots = saveSlots.map(slot => slot.id);
     const emptySlots = [];
-    for (let i = 1; i <= GAME_CONFIG.MAX_SAVE_SLOTS; i++) {
+    for (let i = 1; i <= gameConfig.MAX_SAVE_SLOTS; i++) {
       if (!usedSlots.includes(i)) {
         emptySlots.push(i);
       }
@@ -254,10 +254,10 @@ const SaveLoadMenu: React.FC<SaveLoadMenuProps> = ({ isOpen, onClose, mode }) =>
         )}
 
         {/* No empty slots message for save mode */}
-        {mode === 'save' && getEmptySlots().length === 0 && saveSlots.length >= GAME_CONFIG.MAX_SAVE_SLOTS && (
+        {mode === 'save' && getEmptySlots().length === 0 && saveSlots.length >= gameConfig.MAX_SAVE_SLOTS && (
           <div className="text-center py-6 text-gray-500 bg-gray-50 rounded-lg">
             <p className="text-sm">
-              All {GAME_CONFIG.MAX_SAVE_SLOTS} save slots are full.
+              All {gameConfig.MAX_SAVE_SLOTS} save slots are full.
               Overwrite an existing save or delete one to create a new save.
             </p>
           </div>

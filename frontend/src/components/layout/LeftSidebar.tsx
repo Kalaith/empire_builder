@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { useUIStore } from '../../stores/uiStore';
-import { BUILDING_TYPES } from '../../data/gameData';
+import { buildingTypes } from '../../data/gameData';
 import type { ResourceCost } from '../../types/game';
 
 const LeftSidebar: React.FC = () => {
@@ -18,7 +18,7 @@ const LeftSidebar: React.FC = () => {
 
   const handleBuildingClick = (type: string) => {
     selectBuildingType(type);
-    addGameMessage(`Selected ${BUILDING_TYPES[type].name} - click empty cell to build`, 'info');
+    addGameMessage(`Selected ${buildingTypes[type].name} - click empty cell to build`, 'info');
   };
 
   const handleSpawnHero = (guildType: string) => {
@@ -69,7 +69,7 @@ const LeftSidebar: React.FC = () => {
             <h4 className="text-md font-semibold mb-2 text-gray-700">{category.title}</h4>
             <div className="building-list space-y-2">
               {category.buildings.map((buildingType) => {
-                const building = BUILDING_TYPES[buildingType];
+                const building = buildingTypes[buildingType];
                 const actualCost = getBuildingCost(buildingType);
                 const canAffordBuilding = canAfford(actualCost);
                 const isSelected = selectedBuildingType === buildingType;

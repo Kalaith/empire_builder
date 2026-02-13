@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { useUIStore } from '../../stores/uiStore';
-import { FLAG_TYPES } from '../../data/gameData';
+import { flagTypes } from '../../data/gameData';
 import type { GridCell } from '../../types/game';
 
 const GameGrid: React.FC = () => {
@@ -45,7 +45,7 @@ const GameGrid: React.FC = () => {
       addGameMessage('Selection cancelled', 'info');
     } else {
       selectFlagType(type);
-      addGameMessage(`Selected ${FLAG_TYPES[type].name} - click empty cell to place`, 'info');
+      addGameMessage(`Selected ${flagTypes[type].name} - click empty cell to place`, 'info');
     }
   };
 
@@ -85,7 +85,7 @@ const GameGrid: React.FC = () => {
       <div className="flag-controls bg-white rounded-lg shadow-md p-4">
         <h4 className="text-md font-bold mb-3 text-gray-800">Place Reward Flags</h4>
         <div className="flag-buttons flex gap-2 flex-wrap">
-          {Object.entries(FLAG_TYPES).map(([type, flag]) => {
+          {Object.entries(flagTypes).map(([type, flag]) => {
             const canAfford = resources.gold >= flag.baseCost;
             const isSelected = selectedFlagType === type;
 

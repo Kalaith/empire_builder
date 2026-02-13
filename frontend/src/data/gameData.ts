@@ -9,7 +9,7 @@ import type {
   Achievement,
 } from '../types/game';
 
-export const BUILDING_TYPES: Record<string, BuildingType> = {
+export const buildingTypes: Record<string, BuildingType> = {
   castle: {
     name: "Castle",
     cost: { gold: 0 },
@@ -143,7 +143,7 @@ export const BUILDING_TYPES: Record<string, BuildingType> = {
   }
 };
 
-export const HERO_CLASSES: Record<string, HeroClass> = {
+export const heroClasses: Record<string, HeroClass> = {
   warrior: {
     name: "Warrior",
     baseHealth: 100,
@@ -194,7 +194,7 @@ export const HERO_CLASSES: Record<string, HeroClass> = {
   }
 };
 
-export const HERO_SPECIALIZATIONS: Record<string, HeroSpecialization> = {
+export const heroSpecializations: Record<string, HeroSpecialization> = {
   // Warrior Specializations
   guardian: {
     id: "guardian",
@@ -426,19 +426,19 @@ export const EQUIPMENT: Record<string, Equipment> = {
   }
 };
 
-export const FLAG_TYPES: Record<string, FlagType> = {
+export const flagTypes: Record<string, FlagType> = {
   attack: { name: "Attack Flag", color: "#FF0000", symbol: "⚔️", baseCost: 50 },
   explore: { name: "Explore Flag", color: "#00FF00", symbol: "🔍", baseCost: 30 },
   defend: { name: "Defend Flag", color: "#0000FF", symbol: "🛡️", baseCost: 40 }
 };
 
-export const ENEMY_TYPES: Record<string, EnemyType> = {
+export const enemyTypes: Record<string, EnemyType> = {
   goblin: { name: "Goblin", health: 40, damage: 8, reward: 20, color: "#228B22", symbol: "👹" },
   orc: { name: "Orc", health: 60, damage: 12, reward: 35, color: "#8B0000", symbol: "👹" },
   troll: { name: "Troll", health: 120, damage: 25, reward: 80, color: "#4B0082", symbol: "👹" }
 };
 
-export const SAMPLE_QUESTS: Quest[] = [
+export const sampleQuests: Quest[] = [
   {
     id: "first_hero",
     title: "Recruit Your First Hero",
@@ -481,7 +481,7 @@ export const SAMPLE_QUESTS: Quest[] = [
   }
 ];
 
-export const SAMPLE_ACHIEVEMENTS: Achievement[] = [
+export const sampleAchievements: Achievement[] = [
   {
     id: "kingdom_founder",
     title: "Kingdom Founder",
@@ -540,7 +540,7 @@ export const SAMPLE_ACHIEVEMENTS: Achievement[] = [
 ];
 
 // Game configuration constants
-export const GAME_CONFIG = {
+export const gameConfig = {
   GRID_WIDTH: 20,
   GRID_HEIGHT: 15,
   STARTING_RESOURCES: {

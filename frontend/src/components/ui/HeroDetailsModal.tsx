@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import type { Hero, Equipment } from '../../types/game';
 import { useGameStore } from '../../stores/gameStore';
-import { HERO_SPECIALIZATIONS, EQUIPMENT } from '../../data/gameData';
+import { heroSpecializations, EQUIPMENT } from '../../data/gameData';
 
 interface HeroDetailsModalProps {
   hero: Hero;
@@ -17,7 +17,7 @@ const HeroDetailsModal: React.FC<HeroDetailsModalProps> = ({ hero, isOpen, onClo
   if (!isOpen) return null;
 
   const canLevelUp = hero.experience >= hero.experienceToNext;
-  const availableSpecializations = Object.values(HERO_SPECIALIZATIONS).filter(
+  const availableSpecializations = Object.values(heroSpecializations).filter(
     spec => hero.type && spec.id.includes(hero.type) && hero.level >= spec.unlockLevel && !hero.specialization
   );
 

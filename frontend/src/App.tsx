@@ -8,7 +8,7 @@ import GameGrid from './components/game/GameGrid';
 import RightSidebar from './components/layout/RightSidebar';
 import GameMessages from './components/ui/GameMessages';
 import GameOverModal from './components/ui/GameOverModal';
-import { GAME_CONFIG } from './data/gameData';
+import { gameConfig } from './data/gameData';
 
 const App: React.FC = () => {
   const { initializeGrid, placeCastle, collectIncome, spawnEnemy, isGameRunning } = useGameStore();
@@ -30,7 +30,7 @@ const App: React.FC = () => {
 
     const incomeLoop = setInterval(() => {
       collectIncome();
-    }, GAME_CONFIG.INCOME_INTERVAL);
+    }, gameConfig.INCOME_INTERVAL);
 
     return () => clearInterval(incomeLoop);
   }, [collectIncome, isGameRunning]);
@@ -43,7 +43,7 @@ const App: React.FC = () => {
       if (Math.random() < 0.3) { // 30% chance to spawn enemy every 5 seconds
         spawnEnemy();
       }
-    }, GAME_CONFIG.ENEMY_SPAWN_INTERVAL);
+    }, gameConfig.ENEMY_SPAWN_INTERVAL);
 
     return () => clearInterval(enemyLoop);
   }, [spawnEnemy, isGameRunning]);

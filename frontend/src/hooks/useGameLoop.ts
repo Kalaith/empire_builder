@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { useGameStore } from '../stores/gameStore';
 import { useUIStore } from '../stores/uiStore';
-import { GAME_CONFIG } from '../data/gameData';
+import { gameConfig } from '../data/gameData';
 import type { Hero, Enemy, Flag, CombatRecord } from '../types/game';
 
 export const useGameLoop = () => {
@@ -532,7 +532,7 @@ export const useGameLoop = () => {
           updateEnemyAI(enemy);
         }
       });
-    }, GAME_CONFIG.GAME_LOOP_INTERVAL);
+    }, gameConfig.GAME_LOOP_INTERVAL);
 
     return () => clearInterval(gameLoop);
   }, [heroes, enemies, updateHeroAI, updateEnemyAI]);

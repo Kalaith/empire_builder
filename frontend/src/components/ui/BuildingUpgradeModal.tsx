@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import type { Building, ResourceCost, ResourceProduction } from '../../types/game';
 import { useGameStore } from '../../stores/gameStore';
-import { BUILDING_TYPES } from '../../data/gameData';
+import { buildingTypes } from '../../data/gameData';
 
 interface BuildingUpgradeModalProps {
   building: Building;
@@ -15,7 +15,7 @@ const BuildingUpgradeModal: React.FC<BuildingUpgradeModalProps> = ({ building, i
 
   if (!isOpen) return null;
 
-  const buildingType = BUILDING_TYPES[building.type];
+  const buildingType = buildingTypes[building.type];
   if (!buildingType) return null;
 
   const nextUpgrade = buildingType.upgrades.find(u => u.level === building.level + 1);

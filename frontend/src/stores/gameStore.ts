@@ -18,14 +18,13 @@ import type {
   HeroRelationship
 } from '../types/game';
 import {
-  BUILDING_TYPES,
-  HERO_CLASSES,
-  HERO_SPECIALIZATIONS,
-  FLAG_TYPES,
-  ENEMY_TYPES,
-  SAMPLE_QUESTS,
-  SAMPLE_ACHIEVEMENTS,
-  GAME_CONFIG
+  buildingTypes,
+  heroClasses,
+  heroSpecializations,
+  flagTypes,
+  sampleQuests,
+  sampleAchievements,
+  gameConfig
 } from '../data/gameData';
 
 // Helper functions for cost scaling
@@ -113,9 +112,9 @@ interface GameStore extends GameState {
 
 const createInitialGrid = (): GridCell[][] => {
   const grid: GridCell[][] = [];
-  for (let y = 0; y < GAME_CONFIG.GRID_HEIGHT; y++) {
+  for (let y = 0; y < gameConfig.GRID_HEIGHT; y++) {
     grid[y] = [];
-    for (let x = 0; x < GAME_CONFIG.GRID_WIDTH; x++) {
+    for (let x = 0; x < gameConfig.GRID_WIDTH; x++) {
       grid[y][x] = {};
     }
   }
@@ -152,16 +151,16 @@ const createInitialStatistics = (): GameStatistics => ({
 });
 
 const createInitialState = (): GameState => ({
-  resources: { ...GAME_CONFIG.STARTING_RESOURCES },
-  gridWidth: GAME_CONFIG.GRID_WIDTH,
-  gridHeight: GAME_CONFIG.GRID_HEIGHT,
+  resources: { ...gameConfig.STARTING_RESOURCES },
+  gridWidth: gameConfig.GRID_WIDTH,
+  gridHeight: gameConfig.GRID_HEIGHT,
   grid: createInitialGrid(),
   buildings: [],
   heroes: [],
   enemies: [],
   flags: [],
-  quests: [...SAMPLE_QUESTS],
-  achievements: [...SAMPLE_ACHIEVEMENTS],
+  quests: [...sampleQuests],
+  achievements: [...sampleAchievements],
   activeEvents: [],
   gameTime: 0,
   isGameOver: false,
@@ -169,7 +168,7 @@ const createInitialState = (): GameState => ({
   difficulty: 'normal',
   nextHeroId: 1,
   nextEnemyId: 1,
-  nextQuestId: SAMPLE_QUESTS.length + 1,
+  nextQuestId: sampleQuests.length + 1,
   statistics: createInitialStatistics()
 });
 
@@ -197,7 +196,7 @@ export const useGameStore = create<GameStore>()(
           productionCooldown: 0,
           healthPoints: 100,
           maxHealthPoints: 100,
-          ...BUILDING_TYPES.castle
+          ...buildingTypes.castle
         };
 
         const newBuildings = [...state.buildings, castle];
@@ -264,7 +263,7 @@ export const useGameStore = create<GameStore>()(
         const state = get();
         if (!state.canPlaceBuilding(x, y)) return null;
 
-        const buildingData = BUILDING_TYPES[type];
+        const buildingData = buildingTypes[type];
         const existingBuildingsOfType = state.buildings.filter(b => b.type === type).length;
         const scaledCost = calculateBuildingCost(buildingData.cost, existingBuildingsOfType);
         
@@ -311,7 +310,7 @@ export const useGameStore = create<GameStore>()(
         const building = state.buildings.find(b => b.id === buildingId);
         if (!building) return false;
 
-        const buildingType = BUILDING_TYPES[building.type];
+        const buildingType = buildingTypes[building.type];
         if (!buildingType || building.level >= buildingType.maxLevel) return false;
 
         const upgrade = buildingType.upgrades.find(u => u.level === building.level + 1);
@@ -354,7 +353,7 @@ export const useGameStore = create<GameStore>()(
       // Hero Cost and Capacity Management
       getHeroRecruitmentCost: (heroType: string) => {
         const state = get();
-        const heroClass = HERO_CLASSES[heroType];
+        const heroClass = heroClasses[heroType];
         if (!heroClass) return { gold: 0 };
         
         const existingHeroCount = state.heroes.length;
@@ -399,7 +398,7 @@ export const useGameStore = create<GameStore>()(
 
       getBuildingCost: (buildingType: string) => {
         const state = get();
-        const buildingData = BUILDING_TYPES[buildingType];
+        const buildingData = buildingTypes[buildingType];
         if (!buildingData) return { gold: 0 };
         
         const existingBuildingsOfType = state.buildings.filter(b => b.type === buildingType).length;
@@ -410,13 +409,13 @@ export const useGameStore = create<GameStore>()(
         const state = get();
         const heroType = guildType.replace('Guild', '').toLowerCase();
         const guild = state.buildings.find(b => b.type === guildType);
-        if (!guild || !HERO_CLASSES[heroType]) return null;
+        if (!guild || !heroClasses[heroType]) return null;
         
         // Check if hero can be recruited
         const recruitmentCheck = state.canRecruitHero(guildType);
         if (!recruitmentCheck.canRecruit) return null;
 
-        const heroClass = HERO_CLASSES[heroType];
+        const heroClass = heroClasses[heroType];
         const recruitmentCost = state.getHeroRecruitmentCost(heroType);
         
         // Spend the recruitment cost
@@ -438,7 +437,7 @@ export const useGameStore = create<GameStore>()(
           gold: 0,
           level: 1,
           experience: 0,
-          experienceToNext: GAME_CONFIG.BASE_EXPERIENCE,
+          experienceToNext: gameConfig.BASE_EXPERIENCE,
           equipment: createInitialHeroEquipment(),
           skills: createInitialHeroSkills(),
           specialization: undefined,
@@ -492,8 +491,8 @@ export const useGameStore = create<GameStore>()(
         if (!hero || hero.experience < hero.experienceToNext) return false;
 
         const newLevel = hero.level + 1;
-        const statIncrease = Math.floor(newLevel * GAME_CONFIG.LEVEL_MULTIPLIER);
-        const newExperienceToNext = Math.floor(hero.experienceToNext * GAME_CONFIG.LEVEL_MULTIPLIER);
+        const statIncrease = Math.floor(newLevel * gameConfig.LEVEL_MULTIPLIER);
+        const newExperienceToNext = Math.floor(hero.experienceToNext * gameConfig.LEVEL_MULTIPLIER);
 
         const updatedHeroes = state.heroes.map(h => {
           if (h.id === heroId) {
@@ -525,7 +524,7 @@ export const useGameStore = create<GameStore>()(
       assignSpecialization: (heroId: string, specializationId: string) => {
         const state = get();
         const hero = state.heroes.find(h => h.id === heroId);
-        const specialization = HERO_SPECIALIZATIONS[specializationId];
+        const specialization = heroSpecializations[specializationId];
 
         if (!hero || !specialization || hero.level < specialization.unlockLevel || hero.specialization) {
           return false;
@@ -649,7 +648,7 @@ export const useGameStore = create<GameStore>()(
 
       spawnEnemy: () => {
         const state = get();
-        const enemyTypes = Object.keys(ENEMY_TYPES);
+        const enemyTypes = Object.keys(enemyTypes);
         const type = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
 
         // Spawn at random edge
@@ -675,7 +674,7 @@ export const useGameStore = create<GameStore>()(
 
         if (state.grid[y][x].building || state.grid[y][x].enemy) return null;
 
-        const enemyData = ENEMY_TYPES[type];
+        const enemyData = enemyTypes[type];
         const enemy: Enemy = {
           id: `enemy_${state.nextEnemyId}`,
           type,
@@ -708,10 +707,10 @@ export const useGameStore = create<GameStore>()(
       placeFlag: (type: string, x: number, y: number) => {
         const state = get();
         if (x < 0 || x >= state.gridWidth || y < 0 || y >= state.gridHeight) return null;
-        if (state.resources.gold < FLAG_TYPES[type].baseCost) return null;
+        if (state.resources.gold < flagTypes[type].baseCost) return null;
         if (state.grid[y][x].flag || state.grid[y][x].building) return null;
 
-        const flagData = FLAG_TYPES[type];
+        const flagData = flagTypes[type];
         const flag: Flag = {
           id: `flag_${Date.now()}`,
           type,
@@ -1053,7 +1052,7 @@ export const useGameStore = create<GameStore>()(
 
       getSaveSlots: () => {
         const slots: SaveSlot[] = [];
-        for (let i = 1; i <= GAME_CONFIG.MAX_SAVE_SLOTS; i++) {
+        for (let i = 1; i <= gameConfig.MAX_SAVE_SLOTS; i++) {
           try {
             const saveDataString = localStorage.getItem(`empire_builder_save_${i}`);
             if (saveDataString) {
