@@ -1,6 +1,5 @@
-
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import type {
   GameState,
   Building,
@@ -16,8 +15,8 @@ import type {
   Equipment,
   ResourceCost,
   CombatRecord,
-  HeroRelationship
-} from '../types/game';
+  HeroRelationship,
+} from "../types/game";
 import {
   buildingTypes,
   heroClasses,
@@ -26,29 +25,39 @@ import {
   enemyTypes,
   sampleQuests,
   sampleAchievements,
-  gameConfig
-} from '../data/gameData';
+  gameConfig,
+} from "../data/gameData";
 
 // Helper functions for cost scaling
-const calculateHeroRecruitmentCost = (baseCost: ResourceCost, existingHeroCount: number): ResourceCost => {
+const calculateHeroRecruitmentCost = (
+  baseCost: ResourceCost,
+  existingHeroCount: number,
+): ResourceCost => {
   // Scale cost by 1.5x for each existing hero of any type
   const multiplier = Math.pow(1.5, existingHeroCount);
   return {
     gold: baseCost.gold ? Math.floor(baseCost.gold * multiplier) : undefined,
     mana: baseCost.mana ? Math.floor(baseCost.mana * multiplier) : undefined,
-    supplies: baseCost.supplies ? Math.floor(baseCost.supplies * multiplier) : undefined,
-    population: baseCost.population
+    supplies: baseCost.supplies
+      ? Math.floor(baseCost.supplies * multiplier)
+      : undefined,
+    population: baseCost.population,
   };
 };
 
-const calculateBuildingCost = (baseCost: ResourceCost, existingBuildingCount: number): ResourceCost => {
+const calculateBuildingCost = (
+  baseCost: ResourceCost,
+  existingBuildingCount: number,
+): ResourceCost => {
   // Scale building cost by 1.25x for each existing building of the same type
   const multiplier = Math.pow(1.25, existingBuildingCount);
   return {
     gold: baseCost.gold ? Math.floor(baseCost.gold * multiplier) : undefined,
     mana: baseCost.mana ? Math.floor(baseCost.mana * multiplier) : undefined,
-    supplies: baseCost.supplies ? Math.floor(baseCost.supplies * multiplier) : undefined,
-    population: baseCost.population
+    supplies: baseCost.supplies
+      ? Math.floor(baseCost.supplies * multiplier)
+      : undefined,
+    population: baseCost.population,
   };
 };
 
@@ -76,29 +85,43 @@ interface GameStore extends GameState {
   assignSpecialization: (heroId: string, specializationId: string) => boolean;
   equipItem: (heroId: string, equipment: Equipment) => boolean;
   updateHeroMorale: (heroId: string, change: number) => void;
-  addHeroRelationship: (heroId1: string, heroId2: string, type: 'friendship' | 'rivalry' | 'romance') => void;
+  addHeroRelationship: (
+    heroId1: string,
+    heroId2: string,
+    type: "friendship" | "rivalry" | "romance",
+  ) => void;
   addCombatRecord: (heroId: string, record: CombatRecord) => void;
 
   // Resource Management
   canAfford: (cost: ResourceCost) => boolean;
   spendResources: (cost: ResourceCost) => boolean;
   addResources: (resources: Partial<Resources>) => void;
-  
+
   // Hero Cost and Capacity Management
   getHeroRecruitmentCost: (heroType: string) => ResourceCost;
-  canRecruitHero: (guildType: string) => { canRecruit: boolean; reason?: string };
+  canRecruitHero: (guildType: string) => {
+    canRecruit: boolean;
+    reason?: string;
+  };
   getGuildCapacity: (guildId: string) => { current: number; max: number };
   getBuildingCost: (buildingType: string) => ResourceCost;
 
   // Quest System
   startQuest: (questId: string, heroId?: string) => boolean;
   completeQuest: (questId: string) => boolean;
-  updateQuestProgress: (questId: string, objectiveId: string, progress: number) => void;
+  updateQuestProgress: (
+    questId: string,
+    objectiveId: string,
+    progress: number,
+  ) => void;
 
   // Achievement System
   checkAchievements: () => void;
   unlockAchievement: (achievementId: string) => boolean;
-  updateAchievementProgress: (achievementId: string, progress: Record<string, number>) => void;
+  updateAchievementProgress: (
+    achievementId: string,
+    progress: Record<string, number>,
+  ) => void;
 
   // Save/Load System
   saveGame: (slotId: number, name?: string) => boolean;
@@ -130,13 +153,13 @@ const createInitialHeroSkills = (): HeroSkills => ({
   magic: 10,
   stealth: 10,
   ranged: 10,
-  defense: 10
+  defense: 10,
 });
 
 const createInitialHeroEquipment = (): HeroEquipment => ({
   weapon: undefined,
   armor: undefined,
-  accessory: undefined
+  accessory: undefined,
 });
 
 const createInitialStatistics = (): GameStatistics => ({
@@ -149,7 +172,7 @@ const createInitialStatistics = (): GameStatistics => ({
   highestHeroLevel: 1,
   largestPopulation: 0,
   sessionsPlayed: 1,
-  achievementsUnlocked: 0
+  achievementsUnlocked: 0,
 });
 
 const createInitialState = (): GameState => ({
@@ -167,11 +190,11 @@ const createInitialState = (): GameState => ({
   gameTime: 0,
   isGameOver: false,
   isPaused: false,
-  difficulty: 'normal',
+  difficulty: "normal",
   nextHeroId: 1,
   nextEnemyId: 1,
   nextQuestId: sampleQuests.length + 1,
-  statistics: createInitialStatistics()
+  statistics: createInitialStatistics(),
 });
 
 export const useGameStore = create<GameStore>()(
@@ -189,8 +212,8 @@ export const useGameStore = create<GameStore>()(
         const centerY = Math.floor(state.gridHeight / 2);
 
         const castle: Building = {
-          id: 'castle',
-          type: 'castle',
+          id: "castle",
+          type: "castle",
           x: centerX,
           y: centerY,
           level: 1,
@@ -198,7 +221,7 @@ export const useGameStore = create<GameStore>()(
           productionCooldown: 0,
           healthPoints: 100,
           maxHealthPoints: 100,
-          ...buildingTypes.castle
+          ...buildingTypes.castle,
         };
 
         const newBuildings = [...state.buildings, castle];
@@ -207,15 +230,19 @@ export const useGameStore = create<GameStore>()(
 
         set({
           buildings: newBuildings,
-          grid: newGrid
+          grid: newGrid,
         });
       },
 
       canPlaceBuilding: (x: number, y: number) => {
         const state = get();
-        return x >= 0 && x < state.gridWidth &&
-               y >= 0 && y < state.gridHeight &&
-               !state.grid[y][x].building;
+        return (
+          x >= 0 &&
+          x < state.gridWidth &&
+          y >= 0 &&
+          y < state.gridHeight &&
+          !state.grid[y][x].building
+        );
       },
 
       canAfford: (cost: ResourceCost) => {
@@ -225,7 +252,8 @@ export const useGameStore = create<GameStore>()(
           (!cost.gold || resources.gold >= cost.gold) &&
           (!cost.mana || resources.mana >= cost.mana) &&
           (!cost.supplies || resources.supplies >= cost.supplies) &&
-          (!cost.population || resources.maxPopulation >= resources.population + cost.population)
+          (!cost.population ||
+            resources.maxPopulation >= resources.population + cost.population)
         );
       },
 
@@ -253,10 +281,11 @@ export const useGameStore = create<GameStore>()(
         if (resources.population) {
           newResources.population = Math.min(
             newResources.population + resources.population,
-            newResources.maxPopulation
+            newResources.maxPopulation,
           );
         }
-        if (resources.maxPopulation) newResources.maxPopulation += resources.maxPopulation;
+        if (resources.maxPopulation)
+          newResources.maxPopulation += resources.maxPopulation;
 
         set({ resources: newResources });
       },
@@ -266,9 +295,14 @@ export const useGameStore = create<GameStore>()(
         if (!state.canPlaceBuilding(x, y)) return null;
 
         const buildingData = buildingTypes[type];
-        const existingBuildingsOfType = state.buildings.filter(b => b.type === type).length;
-        const scaledCost = calculateBuildingCost(buildingData.cost, existingBuildingsOfType);
-        
+        const existingBuildingsOfType = state.buildings.filter(
+          (b) => b.type === type,
+        ).length;
+        const scaledCost = calculateBuildingCost(
+          buildingData.cost,
+          existingBuildingsOfType,
+        );
+
         if (!state.canAfford(scaledCost)) return null;
 
         const building: Building = {
@@ -287,7 +321,7 @@ export const useGameStore = create<GameStore>()(
           healthPoints: 100,
           maxHealthPoints: 100,
           heroCapacity: buildingData.heroCapacity,
-          heroCount: buildingData.heroCapacity ? 0 : undefined
+          heroCount: buildingData.heroCapacity ? 0 : undefined,
         };
 
         state.spendResources(scaledCost);
@@ -298,32 +332,38 @@ export const useGameStore = create<GameStore>()(
 
         set({
           buildings: newBuildings,
-          grid: newGrid
+          grid: newGrid,
         });
 
         // Update statistics
-        state.updateStatistics({ totalBuildingsConstructed: state.statistics.totalBuildingsConstructed + 1 });
+        state.updateStatistics({
+          totalBuildingsConstructed:
+            state.statistics.totalBuildingsConstructed + 1,
+        });
 
         return building;
       },
 
       upgradeBuilding: (buildingId: string) => {
         const state = get();
-        const building = state.buildings.find(b => b.id === buildingId);
+        const building = state.buildings.find((b) => b.id === buildingId);
         if (!building) return false;
 
         const buildingType = buildingTypes[building.type];
-        if (!buildingType || building.level >= buildingType.maxLevel) return false;
+        if (!buildingType || building.level >= buildingType.maxLevel)
+          return false;
 
-        const upgrade = buildingType.upgrades.find(u => u.level === building.level + 1);
+        const upgrade = buildingType.upgrades.find(
+          (u) => u.level === building.level + 1,
+        );
         if (!upgrade || !state.canAfford(upgrade.cost)) return false;
 
         state.spendResources(upgrade.cost);
 
-        const updatedBuildings = state.buildings.map(b => {
+        const updatedBuildings = state.buildings.map((b) => {
           if (b.id === buildingId) {
             const newProduction = { ...b.production };
-            Object.keys(upgrade.benefits).forEach(key => {
+            Object.keys(upgrade.benefits).forEach((key) => {
               if (upgrade.benefits[key as keyof typeof upgrade.benefits]) {
                 newProduction[key as keyof typeof newProduction] =
                   (newProduction[key as keyof typeof newProduction] || 0) +
@@ -334,19 +374,21 @@ export const useGameStore = create<GameStore>()(
             return {
               ...b,
               level: b.level + 1,
-              production: newProduction
+              production: newProduction,
             };
           }
           return b;
         });
 
         const newGrid = [...state.grid];
-        const upgradedBuilding = updatedBuildings.find(b => b.id === buildingId)!;
+        const upgradedBuilding = updatedBuildings.find(
+          (b) => b.id === buildingId,
+        )!;
         newGrid[building.y][building.x].building = upgradedBuilding;
 
         set({
           buildings: updatedBuildings,
-          grid: newGrid
+          grid: newGrid,
         });
 
         return true;
@@ -357,44 +399,50 @@ export const useGameStore = create<GameStore>()(
         const state = get();
         const heroClass = heroClasses[heroType];
         if (!heroClass) return { gold: 0 };
-        
+
         const existingHeroCount = state.heroes.length;
-        return calculateHeroRecruitmentCost(heroClass.baseCost, existingHeroCount);
+        return calculateHeroRecruitmentCost(
+          heroClass.baseCost,
+          existingHeroCount,
+        );
       },
 
       canRecruitHero: (guildType: string) => {
         const state = get();
-        const guild = state.buildings.find(b => b.type === guildType);
-        
+        const guild = state.buildings.find((b) => b.type === guildType);
+
         if (!guild) {
-          return { canRecruit: false, reason: 'No guild found' };
+          return { canRecruit: false, reason: "No guild found" };
         }
-        
+
         if (!guild.heroCapacity) {
-          return { canRecruit: false, reason: 'Not a guild building' };
+          return { canRecruit: false, reason: "Not a guild building" };
         }
-        
+
         const currentHeroCount = guild.heroCount || 0;
         if (currentHeroCount >= guild.heroCapacity) {
-          return { canRecruit: false, reason: `Guild at capacity (${currentHeroCount}/${guild.heroCapacity})` };
+          return {
+            canRecruit: false,
+            reason: `Guild at capacity (${currentHeroCount}/${guild.heroCapacity})`,
+          };
         }
-        
-        const heroType = guildType.replace('Guild', '').toLowerCase();
+
+        const heroType = guildType.replace("Guild", "").toLowerCase();
         const recruitmentCost = state.getHeroRecruitmentCost(heroType);
-        
+
         if (!state.canAfford(recruitmentCost)) {
-          return { canRecruit: false, reason: 'Insufficient resources' };
+          return { canRecruit: false, reason: "Insufficient resources" };
         }
-        
+
         return { canRecruit: true };
       },
 
       getGuildCapacity: (guildId: string) => {
         const state = get();
-        const guild = state.buildings.find(b => b.id === guildId);
+        const guild = state.buildings.find((b) => b.id === guildId);
         return {
           current: guild?.heroCount || 0,
-          max: guild?.heroCapacity || 0
+          max: guild?.heroCapacity || 0,
         };
       },
 
@@ -402,24 +450,29 @@ export const useGameStore = create<GameStore>()(
         const state = get();
         const buildingData = buildingTypes[buildingType];
         if (!buildingData) return { gold: 0 };
-        
-        const existingBuildingsOfType = state.buildings.filter(b => b.type === buildingType).length;
-        return calculateBuildingCost(buildingData.cost, existingBuildingsOfType);
+
+        const existingBuildingsOfType = state.buildings.filter(
+          (b) => b.type === buildingType,
+        ).length;
+        return calculateBuildingCost(
+          buildingData.cost,
+          existingBuildingsOfType,
+        );
       },
 
       spawnHero: (guildType: string) => {
         const state = get();
-        const heroType = guildType.replace('Guild', '').toLowerCase();
-        const guild = state.buildings.find(b => b.type === guildType);
+        const heroType = guildType.replace("Guild", "").toLowerCase();
+        const guild = state.buildings.find((b) => b.type === guildType);
         if (!guild || !heroClasses[heroType]) return null;
-        
+
         // Check if hero can be recruited
         const recruitmentCheck = state.canRecruitHero(guildType);
         if (!recruitmentCheck.canRecruit) return null;
 
         const heroClass = heroClasses[heroType];
         const recruitmentCost = state.getHeroRecruitmentCost(heroType);
-        
+
         // Spend the recruitment cost
         if (!state.spendResources(recruitmentCost)) return null;
         const hero: Hero = {
@@ -446,13 +499,13 @@ export const useGameStore = create<GameStore>()(
           morale: 100,
           relationships: [],
           moveCooldown: 0,
-          lastAction: 'spawned',
+          lastAction: "spawned",
           combatHistory: [],
           questsCompleted: 0,
           heroName: `${heroClass.name} ${state.nextHeroId}`,
           className: heroClass.name,
           symbol: heroClass.symbol,
-          preferences: [...heroClass.preferences]
+          preferences: [...heroClass.preferences],
         };
 
         const newHeroes = [...state.heroes, hero];
@@ -460,11 +513,11 @@ export const useGameStore = create<GameStore>()(
         newGrid[hero.y][hero.x].hero = hero;
 
         // Update guild hero count
-        const updatedBuildings = state.buildings.map(b => {
+        const updatedBuildings = state.buildings.map((b) => {
           if (b.id === guild.id) {
             return {
               ...b,
-              heroCount: (b.heroCount || 0) + 1
+              heroCount: (b.heroCount || 0) + 1,
             };
           }
           return b;
@@ -472,31 +525,37 @@ export const useGameStore = create<GameStore>()(
 
         // Update building in grid
         const updatedGrid = [...newGrid];
-        updatedGrid[guild.y][guild.x].building = updatedBuildings.find(b => b.id === guild.id);
+        updatedGrid[guild.y][guild.x].building = updatedBuildings.find(
+          (b) => b.id === guild.id,
+        );
 
         set({
           heroes: newHeroes,
           grid: updatedGrid,
           buildings: updatedBuildings,
-          nextHeroId: state.nextHeroId + 1
+          nextHeroId: state.nextHeroId + 1,
         });
 
         // Update statistics
-        state.updateStatistics({ totalHeroesRecruited: state.statistics.totalHeroesRecruited + 1 });
+        state.updateStatistics({
+          totalHeroesRecruited: state.statistics.totalHeroesRecruited + 1,
+        });
 
         return hero;
       },
 
       levelUpHero: (heroId: string) => {
         const state = get();
-        const hero = state.heroes.find(h => h.id === heroId);
+        const hero = state.heroes.find((h) => h.id === heroId);
         if (!hero || hero.experience < hero.experienceToNext) return false;
 
         const newLevel = hero.level + 1;
         const statIncrease = Math.floor(newLevel * gameConfig.LEVEL_MULTIPLIER);
-        const newExperienceToNext = Math.floor(hero.experienceToNext * gameConfig.LEVEL_MULTIPLIER);
+        const newExperienceToNext = Math.floor(
+          hero.experienceToNext * gameConfig.LEVEL_MULTIPLIER,
+        );
 
-        const updatedHeroes = state.heroes.map(h => {
+        const updatedHeroes = state.heroes.map((h) => {
           if (h.id === heroId) {
             return {
               ...h,
@@ -506,7 +565,7 @@ export const useGameStore = create<GameStore>()(
               maxHealth: h.maxHealth + statIncrease,
               health: h.health + statIncrease,
               damage: h.damage + Math.floor(statIncrease * 0.8),
-              speed: h.speed + Math.floor(statIncrease * 0.3)
+              speed: h.speed + Math.floor(statIncrease * 0.3),
             };
           }
           return h;
@@ -515,7 +574,7 @@ export const useGameStore = create<GameStore>()(
         set({ heroes: updatedHeroes });
 
         // Update statistics
-        const highestLevel = Math.max(...updatedHeroes.map(h => h.level));
+        const highestLevel = Math.max(...updatedHeroes.map((h) => h.level));
         if (highestLevel > state.statistics.highestHeroLevel) {
           state.updateStatistics({ highestHeroLevel: highestLevel });
         }
@@ -525,14 +584,19 @@ export const useGameStore = create<GameStore>()(
 
       assignSpecialization: (heroId: string, specializationId: string) => {
         const state = get();
-        const hero = state.heroes.find(h => h.id === heroId);
+        const hero = state.heroes.find((h) => h.id === heroId);
         const specialization = heroSpecializations[specializationId];
 
-        if (!hero || !specialization || hero.level < specialization.unlockLevel || hero.specialization) {
+        if (
+          !hero ||
+          !specialization ||
+          hero.level < specialization.unlockLevel ||
+          hero.specialization
+        ) {
           return false;
         }
 
-        const updatedHeroes = state.heroes.map(h => {
+        const updatedHeroes = state.heroes.map((h) => {
           if (h.id === heroId) {
             return {
               ...h,
@@ -540,7 +604,7 @@ export const useGameStore = create<GameStore>()(
               maxHealth: h.maxHealth + specialization.healthBonus,
               health: h.health + specialization.healthBonus,
               damage: h.damage + specialization.damageBonus,
-              speed: h.speed + specialization.speedBonus
+              speed: h.speed + specialization.speedBonus,
             };
           }
           return h;
@@ -552,12 +616,12 @@ export const useGameStore = create<GameStore>()(
 
       equipItem: (heroId: string, equipment: Equipment) => {
         const state = get();
-        const hero = state.heroes.find(h => h.id === heroId);
+        const hero = state.heroes.find((h) => h.id === heroId);
         if (!hero || !state.canAfford({ gold: equipment.cost })) return false;
 
         state.spendResources({ gold: equipment.cost });
 
-        const updatedHeroes = state.heroes.map(h => {
+        const updatedHeroes = state.heroes.map((h) => {
           if (h.id === heroId) {
             const oldEquipment = h.equipment[equipment.type];
             const newEquipment = { ...h.equipment };
@@ -580,7 +644,7 @@ export const useGameStore = create<GameStore>()(
               maxHealth: h.maxHealth + healthChange,
               health: h.health + healthChange,
               damage: h.damage + damageChange,
-              speed: h.speed + speedChange
+              speed: h.speed + speedChange,
             };
           }
           return h;
@@ -592,11 +656,11 @@ export const useGameStore = create<GameStore>()(
 
       updateHeroMorale: (heroId: string, change: number) => {
         const state = get();
-        const updatedHeroes = state.heroes.map(h => {
+        const updatedHeroes = state.heroes.map((h) => {
           if (h.id === heroId) {
             return {
               ...h,
-              morale: Math.max(0, Math.min(100, h.morale + change))
+              morale: Math.max(0, Math.min(100, h.morale + change)),
             };
           }
           return h;
@@ -606,20 +670,22 @@ export const useGameStore = create<GameStore>()(
 
       addHeroRelationship: (heroId1: string, heroId2: string, type: string) => {
         const state = get();
-        const updatedHeroes = state.heroes.map(h => {
+        const updatedHeroes = state.heroes.map((h) => {
           if (h.id === heroId1) {
-            const existingRelationship = h.relationships.find(r => r.heroId === heroId2);
+            const existingRelationship = h.relationships.find(
+              (r) => r.heroId === heroId2,
+            );
             if (existingRelationship) return h;
 
             const relationship: HeroRelationship = {
               heroId: heroId2,
-              relationshipType: type as 'friendship' | 'rivalry' | 'romance',
+              relationshipType: type as "friendship" | "rivalry" | "romance",
               strength: 10,
-              history: [`Met ${heroId2}`]
+              history: [`Met ${heroId2}`],
             };
             return {
               ...h,
-              relationships: [...h.relationships, relationship]
+              relationships: [...h.relationships, relationship],
             };
           }
           return h;
@@ -629,12 +695,12 @@ export const useGameStore = create<GameStore>()(
 
       addCombatRecord: (heroId: string, record: CombatRecord) => {
         const state = get();
-        const updatedHeroes = state.heroes.map(h => {
+        const updatedHeroes = state.heroes.map((h) => {
           if (h.id === heroId) {
             return {
               ...h,
               combatHistory: [...h.combatHistory, record],
-              experience: h.experience + record.experienceGained
+              experience: h.experience + record.experienceGained,
             };
           }
           return h;
@@ -642,7 +708,7 @@ export const useGameStore = create<GameStore>()(
         set({ heroes: updatedHeroes });
 
         // Check for level up
-        const hero = updatedHeroes.find(h => h.id === heroId);
+        const hero = updatedHeroes.find((h) => h.id === heroId);
         if (hero && hero.experience >= hero.experienceToNext) {
           state.levelUpHero(heroId);
         }
@@ -651,7 +717,8 @@ export const useGameStore = create<GameStore>()(
       spawnEnemy: () => {
         const state = get();
         const enemyTypeKeys = Object.keys(enemyTypes);
-        const type = enemyTypeKeys[Math.floor(Math.random() * enemyTypeKeys.length)];
+        const type =
+          enemyTypeKeys[Math.floor(Math.random() * enemyTypeKeys.length)];
 
         // Spawn at random edge
         let x: number, y: number;
@@ -690,7 +757,7 @@ export const useGameStore = create<GameStore>()(
           reward: enemyData.reward,
           moveCooldown: 0,
           name: enemyData.name,
-          symbol: enemyData.symbol
+          symbol: enemyData.symbol,
         };
 
         const newEnemies = [...state.enemies, enemy];
@@ -700,7 +767,7 @@ export const useGameStore = create<GameStore>()(
         set({
           enemies: newEnemies,
           grid: newGrid,
-          nextEnemyId: state.nextEnemyId + 1
+          nextEnemyId: state.nextEnemyId + 1,
         });
 
         return enemy;
@@ -708,7 +775,8 @@ export const useGameStore = create<GameStore>()(
 
       placeFlag: (type: string, x: number, y: number) => {
         const state = get();
-        if (x < 0 || x >= state.gridWidth || y < 0 || y >= state.gridHeight) return null;
+        if (x < 0 || x >= state.gridWidth || y < 0 || y >= state.gridHeight)
+          return null;
         if (state.resources.gold < flagTypes[type].baseCost) return null;
         if (state.grid[y][x].flag || state.grid[y][x].building) return null;
 
@@ -721,7 +789,7 @@ export const useGameStore = create<GameStore>()(
           reward: flagData.baseCost,
           name: flagData.name,
           symbol: flagData.symbol,
-          baseCost: flagData.baseCost
+          baseCost: flagData.baseCost,
         };
 
         const newFlags = [...state.flags, flag];
@@ -733,8 +801,8 @@ export const useGameStore = create<GameStore>()(
           grid: newGrid,
           resources: {
             ...state.resources,
-            gold: state.resources.gold - flagData.baseCost
-          }
+            gold: state.resources.gold - flagData.baseCost,
+          },
         });
 
         return flag;
@@ -778,48 +846,48 @@ export const useGameStore = create<GameStore>()(
 
       removeFlag: (flag: Flag) => {
         const state = get();
-        const newFlags = state.flags.filter(f => f.id !== flag.id);
+        const newFlags = state.flags.filter((f) => f.id !== flag.id);
         const newGrid = [...state.grid];
         newGrid[flag.y][flag.x].flag = undefined;
 
         set({
           flags: newFlags,
-          grid: newGrid
+          grid: newGrid,
         });
       },
 
       removeEnemy: (enemy: Enemy) => {
         const state = get();
-        const newEnemies = state.enemies.filter(e => e.id !== enemy.id);
+        const newEnemies = state.enemies.filter((e) => e.id !== enemy.id);
         const newGrid = [...state.grid];
         newGrid[enemy.y][enemy.x].enemy = undefined;
 
         set({
           enemies: newEnemies,
-          grid: newGrid
+          grid: newGrid,
         });
       },
 
       removeHero: (hero: Hero) => {
         const state = get();
-        const newHeroes = state.heroes.filter(h => h.id !== hero.id);
+        const newHeroes = state.heroes.filter((h) => h.id !== hero.id);
         const newGrid = [...state.grid];
         newGrid[hero.y][hero.x].hero = undefined;
 
         // Find the guild that recruited this hero and decrement its count
         const guildType = `${hero.type}Guild`;
-        const updatedBuildings = state.buildings.map(b => {
+        const updatedBuildings = state.buildings.map((b) => {
           if (b.type === guildType && b.heroCount && b.heroCount > 0) {
             return {
               ...b,
-              heroCount: b.heroCount - 1
+              heroCount: b.heroCount - 1,
             };
           }
           return b;
         });
 
         // Update building in grid if found
-        const guild = updatedBuildings.find(b => b.type === guildType);
+        const guild = updatedBuildings.find((b) => b.type === guildType);
         if (guild) {
           newGrid[guild.y][guild.x].building = guild;
         }
@@ -827,7 +895,7 @@ export const useGameStore = create<GameStore>()(
         set({
           heroes: newHeroes,
           grid: newGrid,
-          buildings: updatedBuildings
+          buildings: updatedBuildings,
         });
       },
 
@@ -835,30 +903,36 @@ export const useGameStore = create<GameStore>()(
         const state = get();
         const totalProduction = state.buildings.reduce(
           (totals, building) => {
-            if (building.production.gold) totals.gold += building.production.gold;
-            if (building.production.mana) totals.mana += building.production.mana;
-            if (building.production.supplies) totals.supplies += building.production.supplies;
+            if (building.production.gold)
+              totals.gold += building.production.gold;
+            if (building.production.mana)
+              totals.mana += building.production.mana;
+            if (building.production.supplies)
+              totals.supplies += building.production.supplies;
             return totals;
           },
-          { gold: 0, mana: 0, supplies: 0 }
+          { gold: 0, mana: 0, supplies: 0 },
         );
 
         state.addResources(totalProduction);
-        state.updateStatistics({ totalGoldEarned: state.statistics.totalGoldEarned + totalProduction.gold });
+        state.updateStatistics({
+          totalGoldEarned:
+            state.statistics.totalGoldEarned + totalProduction.gold,
+        });
       },
 
       // Quest System Methods
       startQuest: (questId: string, heroId?: string) => {
         const state = get();
-        const quest = state.quests.find(q => q.id === questId);
+        const quest = state.quests.find((q) => q.id === questId);
         if (!quest || quest.isActive || quest.isCompleted) return false;
 
-        const updatedQuests = state.quests.map(q => {
+        const updatedQuests = state.quests.map((q) => {
           if (q.id === questId) {
             return {
               ...q,
               isActive: true,
-              assignedHeroId: heroId
+              assignedHeroId: heroId,
             };
           }
           return q;
@@ -870,23 +944,25 @@ export const useGameStore = create<GameStore>()(
 
       completeQuest: (questId: string) => {
         const state = get();
-        const quest = state.quests.find(q => q.id === questId);
+        const quest = state.quests.find((q) => q.id === questId);
         if (!quest || !quest.isActive || quest.isCompleted) return false;
 
         // Check if all objectives are completed
-        const allObjectivesCompleted = quest.objectives.every(obj => obj.isCompleted);
+        const allObjectivesCompleted = quest.objectives.every(
+          (obj) => obj.isCompleted,
+        );
         if (!allObjectivesCompleted) return false;
 
         // Award resources
         state.addResources(quest.rewards);
 
         // Mark quest as completed
-        const updatedQuests = state.quests.map(q => {
+        const updatedQuests = state.quests.map((q) => {
           if (q.id === questId) {
             return {
               ...q,
               isActive: false,
-              isCompleted: true
+              isCompleted: true,
             };
           }
           return q;
@@ -895,22 +971,28 @@ export const useGameStore = create<GameStore>()(
         set({ quests: updatedQuests });
 
         // Update statistics
-        state.updateStatistics({ totalQuestsCompleted: state.statistics.totalQuestsCompleted + 1 });
+        state.updateStatistics({
+          totalQuestsCompleted: state.statistics.totalQuestsCompleted + 1,
+        });
 
         return true;
       },
 
-      updateQuestProgress: (questId: string, objectiveId: string, progress: number) => {
+      updateQuestProgress: (
+        questId: string,
+        objectiveId: string,
+        progress: number,
+      ) => {
         const state = get();
-        const updatedQuests = state.quests.map(q => {
+        const updatedQuests = state.quests.map((q) => {
           if (q.id === questId && q.isActive) {
-            const updatedObjectives = q.objectives.map(obj => {
+            const updatedObjectives = q.objectives.map((obj) => {
               if (obj.id === objectiveId) {
                 const newCurrent = Math.min(obj.target, obj.current + progress);
                 return {
                   ...obj,
                   current: newCurrent,
-                  isCompleted: newCurrent >= obj.target
+                  isCompleted: newCurrent >= obj.target,
                 };
               }
               return obj;
@@ -918,7 +1000,7 @@ export const useGameStore = create<GameStore>()(
 
             return {
               ...q,
-              objectives: updatedObjectives
+              objectives: updatedObjectives,
             };
           }
           return q;
@@ -927,8 +1009,8 @@ export const useGameStore = create<GameStore>()(
         set({ quests: updatedQuests });
 
         // Check if quest can be completed
-        const quest = updatedQuests.find(q => q.id === questId);
-        if (quest && quest.objectives.every(obj => obj.isCompleted)) {
+        const quest = updatedQuests.find((q) => q.id === questId);
+        if (quest && quest.objectives.every((obj) => obj.isCompleted)) {
           state.completeQuest(questId);
         }
       },
@@ -938,14 +1020,16 @@ export const useGameStore = create<GameStore>()(
         const state = get();
         const unlockedAchievements: string[] = [];
 
-        const updatedAchievements = state.achievements.map(achievement => {
+        const updatedAchievements = state.achievements.map((achievement) => {
           if (achievement.isUnlocked) return achievement;
 
-          const requirementsMet = Object.keys(achievement.requirements).every(key => {
-            const requiredValue = achievement.requirements[key];
-            const currentValue = achievement.progress[key] || 0;
-            return currentValue >= requiredValue;
-          });
+          const requirementsMet = Object.keys(achievement.requirements).every(
+            (key) => {
+              const requiredValue = achievement.requirements[key];
+              const currentValue = achievement.progress[key] || 0;
+              return currentValue >= requiredValue;
+            },
+          );
 
           if (requirementsMet) {
             unlockedAchievements.push(achievement.id);
@@ -959,17 +1043,21 @@ export const useGameStore = create<GameStore>()(
         if (unlockedAchievements.length > 0) {
           set({ achievements: updatedAchievements });
           state.updateStatistics({
-            achievementsUnlocked: state.statistics.achievementsUnlocked + unlockedAchievements.length
+            achievementsUnlocked:
+              state.statistics.achievementsUnlocked +
+              unlockedAchievements.length,
           });
         }
       },
 
       unlockAchievement: (achievementId: string) => {
         const state = get();
-        const achievement = state.achievements.find(a => a.id === achievementId);
+        const achievement = state.achievements.find(
+          (a) => a.id === achievementId,
+        );
         if (!achievement || achievement.isUnlocked) return false;
 
-        const updatedAchievements = state.achievements.map(a => {
+        const updatedAchievements = state.achievements.map((a) => {
           if (a.id === achievementId) {
             return { ...a, isUnlocked: true };
           }
@@ -978,18 +1066,23 @@ export const useGameStore = create<GameStore>()(
 
         set({ achievements: updatedAchievements });
         state.addResources(achievement.rewards);
-        state.updateStatistics({ achievementsUnlocked: state.statistics.achievementsUnlocked + 1 });
+        state.updateStatistics({
+          achievementsUnlocked: state.statistics.achievementsUnlocked + 1,
+        });
 
         return true;
       },
 
-      updateAchievementProgress: (achievementId: string, progress: Record<string, number>) => {
+      updateAchievementProgress: (
+        achievementId: string,
+        progress: Record<string, number>,
+      ) => {
         const state = get();
-        const updatedAchievements = state.achievements.map(achievement => {
+        const updatedAchievements = state.achievements.map((achievement) => {
           if (achievement.id === achievementId && !achievement.isUnlocked) {
             return {
               ...achievement,
-              progress: { ...achievement.progress, ...progress }
+              progress: { ...achievement.progress, ...progress },
             };
           }
           return achievement;
@@ -1026,28 +1119,33 @@ export const useGameStore = create<GameStore>()(
               nextHeroId: state.nextHeroId,
               nextEnemyId: state.nextEnemyId,
               nextQuestId: state.nextQuestId,
-              statistics: state.statistics
-            }
+              statistics: state.statistics,
+            },
           };
 
-          localStorage.setItem(`empire_builder_save_${slotId}`, JSON.stringify(saveData));
+          localStorage.setItem(
+            `empire_builder_save_${slotId}`,
+            JSON.stringify(saveData),
+          );
           return true;
         } catch (error) {
-          console.error('Failed to save game:', error);
+          console.error("Failed to save game:", error);
           return false;
         }
       },
 
       loadGame: (slotId: number) => {
         try {
-          const saveDataString = localStorage.getItem(`empire_builder_save_${slotId}`);
+          const saveDataString = localStorage.getItem(
+            `empire_builder_save_${slotId}`,
+          );
           if (!saveDataString) return false;
 
           const saveData: SaveSlot = JSON.parse(saveDataString);
           set(saveData.gameState);
           return true;
         } catch (error) {
-          console.error('Failed to load game:', error);
+          console.error("Failed to load game:", error);
           return false;
         }
       },
@@ -1056,7 +1154,9 @@ export const useGameStore = create<GameStore>()(
         const slots: SaveSlot[] = [];
         for (let i = 1; i <= gameConfig.MAX_SAVE_SLOTS; i++) {
           try {
-            const saveDataString = localStorage.getItem(`empire_builder_save_${i}`);
+            const saveDataString = localStorage.getItem(
+              `empire_builder_save_${i}`,
+            );
             if (saveDataString) {
               const saveData: SaveSlot = JSON.parse(saveDataString);
               slots.push(saveData);
@@ -1073,7 +1173,7 @@ export const useGameStore = create<GameStore>()(
           localStorage.removeItem(`empire_builder_save_${slotId}`);
           return true;
         } catch (error) {
-          console.error('Failed to delete save slot:', error);
+          console.error("Failed to delete save slot:", error);
           return false;
         }
       },
@@ -1090,7 +1190,7 @@ export const useGameStore = create<GameStore>()(
       updateStatistics: (updates: Partial<GameStatistics>) => {
         const state = get();
         set({
-          statistics: { ...state.statistics, ...updates }
+          statistics: { ...state.statistics, ...updates },
         });
       },
 
@@ -1106,7 +1206,7 @@ export const useGameStore = create<GameStore>()(
       },
     }),
     {
-      name: 'empire-builder-game',
+      name: "empire-builder-game",
       partialize: (state) => ({
         resources: state.resources,
         buildings: state.buildings,
@@ -1116,7 +1216,6 @@ export const useGameStore = create<GameStore>()(
         nextHeroId: state.nextHeroId,
         nextEnemyId: state.nextEnemyId,
       }),
-    }
-  )
+    },
+  ),
 );
-

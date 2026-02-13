@@ -1,20 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import type { SaveSlot } from '../../types/game';
-import { useGameStore } from '../../stores/gameStore';
-import { gameConfig } from '../../data/gameData';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import type { SaveSlot } from "../../types/game";
+import { useGameStore } from "../../stores/gameStore";
+import { gameConfig } from "../../data/gameData";
 
 interface SaveLoadMenuProps {
   isOpen: boolean;
   onClose: () => void;
-  mode: 'save' | 'load';
+  mode: "save" | "load";
 }
 
-const SaveLoadMenu: React.FC<SaveLoadMenuProps> = ({ isOpen, onClose, mode }) => {
+const SaveLoadMenu: React.FC<SaveLoadMenuProps> = ({
+  isOpen,
+  onClose,
+  mode,
+}) => {
   const { saveGame, loadGame, getSaveSlots, deleteSaveSlot } = useGameStore();
   const [saveSlots, setSaveSlots] = useState<SaveSlot[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
-  const [saveName, setSaveName] = useState<string>('');
+  const [saveName, setSaveName] = useState<string>("");
   const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
 
   useEffect(() => {
@@ -29,7 +33,7 @@ const SaveLoadMenu: React.FC<SaveLoadMenuProps> = ({ isOpen, onClose, mode }) =>
     const name = saveName.trim() || `Save ${slotId}`;
     if (saveGame(slotId, name)) {
       setSaveSlots(getSaveSlots());
-      setSaveName('');
+      setSaveName("");
       onClose();
     }
   };
@@ -52,12 +56,18 @@ const SaveLoadMenu: React.FC<SaveLoadMenuProps> = ({ isOpen, onClose, mode }) =>
   };
 
   const formatDate = (timestamp: number) => {
-    return new Date(timestamp).toLocaleDateString() + ' ' +
-           new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return (
+      new Date(timestamp).toLocaleDateString() +
+      " " +
+      new Date(timestamp).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    );
   };
 
   const getEmptySlots = () => {
-    const usedSlots = saveSlots.map(slot => slot.id);
+    const usedSlots = saveSlots.map((slot) => slot.id);
     const emptySlots = [];
     for (let i = 1; i <= gameConfig.MAX_SAVE_SLOTS; i++) {
       if (!usedSlots.includes(i)) {
@@ -94,7 +104,7 @@ const SaveLoadMenu: React.FC<SaveLoadMenuProps> = ({ isOpen, onClose, mode }) =>
           </button>
         </div>
 
-        {mode === 'save' && (
+        {mode === "save" && (
           <div className="mb-6 bg-blue-50 p-4 rounded-lg">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Save Name (optional)
@@ -113,20 +123,22 @@ const SaveLoadMenu: React.FC<SaveLoadMenuProps> = ({ isOpen, onClose, mode }) =>
         {saveSlots.length > 0 && (
           <div className="mb-6">
             <h3 className="text-lg font-semibold text-gray-800 mb-3">
-              {mode === 'save' ? 'Overwrite Existing Save' : 'Load Game'}
+              {mode === "save" ? "Overwrite Existing Save" : "Load Game"}
             </h3>
             <div className="space-y-3">
-              {saveSlots.map(slot => (
+              {saveSlots.map((slot) => (
                 <motion.div
                   key={slot.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className={`border rounded-lg p-4 cursor-pointer transition-colors ${
                     selectedSlot === slot.id
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-200 hover:bg-gray-50'
+                      ? "border-blue-500 bg-blue-50"
+                      : "border-gray-200 hover:bg-gray-50"
                   }`}
-                  onClick={() => setSelectedSlot(selectedSlot === slot.id ? null : slot.id)}
+                  onClick={() =>
+                    setSelectedSlot(selectedSlot === slot.id ? null : slot.id)
+                  }
                 >
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
@@ -137,15 +149,21 @@ const SaveLoadMenu: React.FC<SaveLoadMenuProps> = ({ isOpen, onClose, mode }) =>
                         Saved: {formatDate(slot.timestamp)}
                       </p>
                       <div className="flex gap-4 text-xs text-gray-500">
-                        <span>💰{Math.floor(slot.gameState.resources.gold)}</span>
+                        <span>
+                          💰{Math.floor(slot.gameState.resources.gold)}
+                        </span>
                         <span>🦸{slot.gameState.heroes.length} heroes</span>
-                        <span>🏠{slot.gameState.buildings.length} buildings</span>
-                        <span>Level {slot.gameState.statistics.highestHeroLevel}</span>
+                        <span>
+                          🏠{slot.gameState.buildings.length} buildings
+                        </span>
+                        <span>
+                          Level {slot.gameState.statistics.highestHeroLevel}
+                        </span>
                       </div>
                     </div>
 
                     <div className="flex gap-2 ml-4">
-                      {mode === 'save' && (
+                      {mode === "save" && (
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -157,7 +175,7 @@ const SaveLoadMenu: React.FC<SaveLoadMenuProps> = ({ isOpen, onClose, mode }) =>
                         </button>
                       )}
 
-                      {mode === 'load' && (
+                      {mode === "load" && (
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -176,11 +194,11 @@ const SaveLoadMenu: React.FC<SaveLoadMenuProps> = ({ isOpen, onClose, mode }) =>
                         }}
                         className={`px-3 py-1 rounded text-sm ${
                           confirmDelete === slot.id
-                            ? 'bg-red-600 text-white hover:bg-red-700'
-                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            ? "bg-red-600 text-white hover:bg-red-700"
+                            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                         }`}
                       >
-                        {confirmDelete === slot.id ? 'Confirm' : 'Delete'}
+                        {confirmDelete === slot.id ? "Confirm" : "Delete"}
                       </button>
                     </div>
                   </div>
@@ -188,26 +206,58 @@ const SaveLoadMenu: React.FC<SaveLoadMenuProps> = ({ isOpen, onClose, mode }) =>
                   {selectedSlot === slot.id && (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
+                      animate={{ opacity: 1, height: "auto" }}
                       className="mt-3 pt-3 border-t border-gray-200"
                     >
                       <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
                         <div>
                           <div>Resources:</div>
                           <div className="text-xs">
-                            <div>💰 {Math.floor(slot.gameState.resources.gold)} Gold</div>
-                            <div>🔮 {Math.floor(slot.gameState.resources.mana)} Mana</div>
-                            <div>📦 {Math.floor(slot.gameState.resources.supplies)} Supplies</div>
-                            <div>👥 {slot.gameState.resources.population}/{slot.gameState.resources.maxPopulation} Population</div>
+                            <div>
+                              💰 {Math.floor(slot.gameState.resources.gold)}{" "}
+                              Gold
+                            </div>
+                            <div>
+                              🔮 {Math.floor(slot.gameState.resources.mana)}{" "}
+                              Mana
+                            </div>
+                            <div>
+                              📦 {Math.floor(slot.gameState.resources.supplies)}{" "}
+                              Supplies
+                            </div>
+                            <div>
+                              👥 {slot.gameState.resources.population}/
+                              {slot.gameState.resources.maxPopulation}{" "}
+                              Population
+                            </div>
                           </div>
                         </div>
                         <div>
                           <div>Statistics:</div>
                           <div className="text-xs">
-                            <div>⚔️ {slot.gameState.statistics.totalEnemiesDefeated} Enemies Defeated</div>
-                            <div>🏗️ {slot.gameState.statistics.totalBuildingsConstructed} Buildings Built</div>
-                            <div>📋 {slot.gameState.statistics.totalQuestsCompleted} Quests Completed</div>
-                            <div>🏆 {slot.gameState.statistics.achievementsUnlocked} Achievements</div>
+                            <div>
+                              ⚔️{" "}
+                              {slot.gameState.statistics.totalEnemiesDefeated}{" "}
+                              Enemies Defeated
+                            </div>
+                            <div>
+                              🏗️{" "}
+                              {
+                                slot.gameState.statistics
+                                  .totalBuildingsConstructed
+                              }{" "}
+                              Buildings Built
+                            </div>
+                            <div>
+                              📋{" "}
+                              {slot.gameState.statistics.totalQuestsCompleted}{" "}
+                              Quests Completed
+                            </div>
+                            <div>
+                              🏆{" "}
+                              {slot.gameState.statistics.achievementsUnlocked}{" "}
+                              Achievements
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -220,13 +270,13 @@ const SaveLoadMenu: React.FC<SaveLoadMenuProps> = ({ isOpen, onClose, mode }) =>
         )}
 
         {/* Empty Slots (for saving) */}
-        {mode === 'save' && getEmptySlots().length > 0 && (
+        {mode === "save" && getEmptySlots().length > 0 && (
           <div>
             <h3 className="text-lg font-semibold text-gray-800 mb-3">
               Create New Save
             </h3>
             <div className="grid grid-cols-2 gap-3">
-              {getEmptySlots().map(slotId => (
+              {getEmptySlots().map((slotId) => (
                 <button
                   key={slotId}
                   onClick={() => handleSave(slotId)}
@@ -245,7 +295,7 @@ const SaveLoadMenu: React.FC<SaveLoadMenuProps> = ({ isOpen, onClose, mode }) =>
         )}
 
         {/* No saves message for load mode */}
-        {mode === 'load' && saveSlots.length === 0 && (
+        {mode === "load" && saveSlots.length === 0 && (
           <div className="text-center py-12 text-gray-500">
             <div className="text-4xl mb-4">💾</div>
             <p className="text-lg mb-2">No saved games found</p>
@@ -254,14 +304,16 @@ const SaveLoadMenu: React.FC<SaveLoadMenuProps> = ({ isOpen, onClose, mode }) =>
         )}
 
         {/* No empty slots message for save mode */}
-        {mode === 'save' && getEmptySlots().length === 0 && saveSlots.length >= gameConfig.MAX_SAVE_SLOTS && (
-          <div className="text-center py-6 text-gray-500 bg-gray-50 rounded-lg">
-            <p className="text-sm">
-              All {gameConfig.MAX_SAVE_SLOTS} save slots are full.
-              Overwrite an existing save or delete one to create a new save.
-            </p>
-          </div>
-        )}
+        {mode === "save" &&
+          getEmptySlots().length === 0 &&
+          saveSlots.length >= gameConfig.MAX_SAVE_SLOTS && (
+            <div className="text-center py-6 text-gray-500 bg-gray-50 rounded-lg">
+              <p className="text-sm">
+                All {gameConfig.MAX_SAVE_SLOTS} save slots are full. Overwrite
+                an existing save or delete one to create a new save.
+              </p>
+            </div>
+          )}
       </motion.div>
     </motion.div>
   );

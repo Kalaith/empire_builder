@@ -7,7 +7,7 @@ import type {
   EnemyType,
   Quest,
   Achievement,
-} from '../types/game';
+} from "../types/game";
 
 export const buildingTypes: Record<string, BuildingType> = {
   castle: {
@@ -16,14 +16,29 @@ export const buildingTypes: Record<string, BuildingType> = {
     production: { gold: 10, population: 5 },
     maxLevel: 10,
     upgrades: [
-      { level: 2, name: "Royal Quarters", cost: { gold: 500 }, benefits: { gold: 5, population: 2 }, requirements: [], description: "Expand the castle with royal quarters" },
-      { level: 3, name: "Treasury", cost: { gold: 1000 }, benefits: { gold: 10 }, requirements: [], description: "Build a treasury to increase gold production" }
+      {
+        level: 2,
+        name: "Royal Quarters",
+        cost: { gold: 500 },
+        benefits: { gold: 5, population: 2 },
+        requirements: [],
+        description: "Expand the castle with royal quarters",
+      },
+      {
+        level: 3,
+        name: "Treasury",
+        cost: { gold: 1000 },
+        benefits: { gold: 10 },
+        requirements: [],
+        description: "Build a treasury to increase gold production",
+      },
     ],
-    category: 'special',
+    category: "special",
     color: "#8B4513",
     symbol: "🏰",
-    description: "The heart of your kingdom, provides leadership and basic resources",
-    prerequisites: []
+    description:
+      "The heart of your kingdom, provides leadership and basic resources",
+    prerequisites: [],
   },
   warriorGuild: {
     name: "Warrior Guild",
@@ -31,14 +46,21 @@ export const buildingTypes: Record<string, BuildingType> = {
     production: { population: -1 },
     maxLevel: 5,
     upgrades: [
-      { level: 2, name: "Training Grounds", cost: { gold: 200, supplies: 30 }, benefits: {}, requirements: [], description: "Better training facilities for warriors" }
+      {
+        level: 2,
+        name: "Training Grounds",
+        cost: { gold: 200, supplies: 30 },
+        benefits: {},
+        requirements: [],
+        description: "Better training facilities for warriors",
+      },
     ],
-    category: 'guild',
+    category: "guild",
     color: "#FF6B6B",
     symbol: "⚔️",
     description: "Trains mighty warriors to defend your kingdom",
     prerequisites: [],
-    heroCapacity: 3
+    heroCapacity: 3,
   },
   rangerGuild: {
     name: "Ranger Guild",
@@ -46,14 +68,21 @@ export const buildingTypes: Record<string, BuildingType> = {
     production: { population: -1 },
     maxLevel: 5,
     upgrades: [
-      { level: 2, name: "Archery Range", cost: { gold: 250, supplies: 35 }, benefits: {}, requirements: [], description: "Advanced archery training facility" }
+      {
+        level: 2,
+        name: "Archery Range",
+        cost: { gold: 250, supplies: 35 },
+        benefits: {},
+        requirements: [],
+        description: "Advanced archery training facility",
+      },
     ],
-    category: 'guild',
+    category: "guild",
     color: "#4ECDC4",
     symbol: "🏹",
     description: "Trains skilled rangers for exploration and ranged combat",
     prerequisites: [],
-    heroCapacity: 4
+    heroCapacity: 4,
   },
   wizardGuild: {
     name: "Wizard Guild",
@@ -61,14 +90,21 @@ export const buildingTypes: Record<string, BuildingType> = {
     production: { mana: 5, population: -1 },
     maxLevel: 5,
     upgrades: [
-      { level: 2, name: "Arcane Library", cost: { gold: 300, supplies: 40 }, benefits: { mana: 3 }, requirements: [], description: "A library of magical knowledge" }
+      {
+        level: 2,
+        name: "Arcane Library",
+        cost: { gold: 300, supplies: 40 },
+        benefits: { mana: 3 },
+        requirements: [],
+        description: "A library of magical knowledge",
+      },
     ],
-    category: 'guild',
+    category: "guild",
     color: "#45B7D1",
     symbol: "🔮",
     description: "Trains powerful wizards and generates mana",
     prerequisites: [],
-    heroCapacity: 2
+    heroCapacity: 2,
   },
   rogueGuild: {
     name: "Rogue Guild",
@@ -76,14 +112,21 @@ export const buildingTypes: Record<string, BuildingType> = {
     production: { gold: 3, population: -1 },
     maxLevel: 5,
     upgrades: [
-      { level: 2, name: "Thieves' Den", cost: { gold: 150, supplies: 25 }, benefits: { gold: 2 }, requirements: [], description: "Underground network for rogues" }
+      {
+        level: 2,
+        name: "Thieves' Den",
+        cost: { gold: 150, supplies: 25 },
+        benefits: { gold: 2 },
+        requirements: [],
+        description: "Underground network for rogues",
+      },
     ],
-    category: 'guild',
+    category: "guild",
     color: "#96CEB4",
     symbol: "🗡️",
     description: "Trains stealthy rogues who bring in extra gold",
     prerequisites: [],
-    heroCapacity: 4
+    heroCapacity: 4,
   },
   marketplace: {
     name: "Marketplace",
@@ -91,13 +134,20 @@ export const buildingTypes: Record<string, BuildingType> = {
     production: { gold: 15 },
     maxLevel: 8,
     upgrades: [
-      { level: 2, name: "Trade Routes", cost: { gold: 150, supplies: 20 }, benefits: { gold: 8 }, requirements: [], description: "Establish profitable trade routes" }
+      {
+        level: 2,
+        name: "Trade Routes",
+        cost: { gold: 150, supplies: 20 },
+        benefits: { gold: 8 },
+        requirements: [],
+        description: "Establish profitable trade routes",
+      },
     ],
-    category: 'economy',
+    category: "economy",
     color: "#FFEAA7",
     symbol: "🏪",
     description: "Central hub for trade and commerce",
-    prerequisites: []
+    prerequisites: [],
   },
   blacksmith: {
     name: "Blacksmith",
@@ -105,13 +155,20 @@ export const buildingTypes: Record<string, BuildingType> = {
     production: { gold: 8, supplies: 2 },
     maxLevel: 6,
     upgrades: [
-      { level: 2, name: "Master Forge", cost: { gold: 200, supplies: 40 }, benefits: { supplies: 3 }, requirements: [], description: "A master-level forge for superior equipment" }
+      {
+        level: 2,
+        name: "Master Forge",
+        cost: { gold: 200, supplies: 40 },
+        benefits: { supplies: 3 },
+        requirements: [],
+        description: "A master-level forge for superior equipment",
+      },
     ],
-    category: 'economy',
+    category: "economy",
     color: "#636E72",
     symbol: "🔨",
     description: "Produces equipment and supplies for your forces",
-    prerequisites: []
+    prerequisites: [],
   },
   inn: {
     name: "Inn",
@@ -119,13 +176,20 @@ export const buildingTypes: Record<string, BuildingType> = {
     production: { gold: 12, population: 1 },
     maxLevel: 6,
     upgrades: [
-      { level: 2, name: "Tavern Hall", cost: { gold: 120, supplies: 15 }, benefits: { gold: 6, population: 1 }, requirements: [], description: "A grand tavern hall for visitors" }
+      {
+        level: 2,
+        name: "Tavern Hall",
+        cost: { gold: 120, supplies: 15 },
+        benefits: { gold: 6, population: 1 },
+        requirements: [],
+        description: "A grand tavern hall for visitors",
+      },
     ],
-    category: 'economy',
+    category: "economy",
     color: "#FD79A8",
     symbol: "🍺",
     description: "Attracts visitors and provides rest for heroes",
-    prerequisites: []
+    prerequisites: [],
   },
   guardTower: {
     name: "Guard Tower",
@@ -133,14 +197,21 @@ export const buildingTypes: Record<string, BuildingType> = {
     production: { gold: 2 },
     maxLevel: 4,
     upgrades: [
-      { level: 2, name: "Watchtower", cost: { gold: 100, supplies: 30 }, benefits: {}, requirements: [], description: "Enhanced tower with better visibility" }
+      {
+        level: 2,
+        name: "Watchtower",
+        cost: { gold: 100, supplies: 30 },
+        benefits: {},
+        requirements: [],
+        description: "Enhanced tower with better visibility",
+      },
     ],
-    category: 'defense',
+    category: "defense",
     color: "#2D3436",
     symbol: "🗼",
     description: "Defensive structure that watches for enemies",
-    prerequisites: []
-  }
+    prerequisites: [],
+  },
 };
 
 export const heroClasses: Record<string, HeroClass> = {
@@ -154,7 +225,7 @@ export const heroClasses: Record<string, HeroClass> = {
     preferences: ["attack", "defend"],
     specializations: ["guardian", "berserker", "paladin"],
     description: "Heavily armored fighters who excel in direct combat",
-    baseCost: { gold: 100 }
+    baseCost: { gold: 100 },
   },
   ranger: {
     name: "Ranger",
@@ -166,7 +237,7 @@ export const heroClasses: Record<string, HeroClass> = {
     preferences: ["explore", "attack"],
     specializations: ["scout", "hunter", "beastmaster"],
     description: "Swift archers skilled in ranged combat and exploration",
-    baseCost: { gold: 120 }
+    baseCost: { gold: 120 },
   },
   wizard: {
     name: "Wizard",
@@ -178,7 +249,7 @@ export const heroClasses: Record<string, HeroClass> = {
     preferences: ["attack", "explore"],
     specializations: ["elementalist", "necromancer", "enchanter"],
     description: "Masters of arcane magic with devastating spells",
-    baseCost: { gold: 150 }
+    baseCost: { gold: 150 },
   },
   rogue: {
     name: "Rogue",
@@ -190,8 +261,8 @@ export const heroClasses: Record<string, HeroClass> = {
     preferences: ["gold", "explore"],
     specializations: ["assassin", "thief", "shadowdancer"],
     description: "Stealthy operatives who strike from the shadows",
-    baseCost: { gold: 80 }
-  }
+    baseCost: { gold: 80 },
+  },
 };
 
 export const heroSpecializations: Record<string, HeroSpecialization> = {
@@ -204,7 +275,7 @@ export const heroSpecializations: Record<string, HeroSpecialization> = {
     damageBonus: 5,
     speedBonus: 0,
     specialAbilities: ["taunt", "shield_wall", "protect_ally"],
-    unlockLevel: 3
+    unlockLevel: 3,
   },
   berserker: {
     id: "berserker",
@@ -214,7 +285,7 @@ export const heroSpecializations: Record<string, HeroSpecialization> = {
     damageBonus: 15,
     speedBonus: 1,
     specialAbilities: ["rage", "bloodlust", "cleave"],
-    unlockLevel: 3
+    unlockLevel: 3,
   },
   paladin: {
     id: "paladin",
@@ -224,7 +295,7 @@ export const heroSpecializations: Record<string, HeroSpecialization> = {
     damageBonus: 10,
     speedBonus: 0,
     specialAbilities: ["heal", "divine_smite", "blessing"],
-    unlockLevel: 5
+    unlockLevel: 5,
   },
   // Ranger Specializations
   scout: {
@@ -235,7 +306,7 @@ export const heroSpecializations: Record<string, HeroSpecialization> = {
     damageBonus: 8,
     speedBonus: 3,
     specialAbilities: ["stealth", "track", "ambush"],
-    unlockLevel: 3
+    unlockLevel: 3,
   },
   hunter: {
     id: "hunter",
@@ -245,7 +316,7 @@ export const heroSpecializations: Record<string, HeroSpecialization> = {
     damageBonus: 12,
     speedBonus: 1,
     specialAbilities: ["piercing_shot", "trap", "mark_target"],
-    unlockLevel: 3
+    unlockLevel: 3,
   },
   beastmaster: {
     id: "beastmaster",
@@ -255,7 +326,7 @@ export const heroSpecializations: Record<string, HeroSpecialization> = {
     damageBonus: 5,
     speedBonus: 2,
     specialAbilities: ["summon_wolf", "animal_bond", "pack_leader"],
-    unlockLevel: 5
+    unlockLevel: 5,
   },
   // Wizard Specializations
   elementalist: {
@@ -266,7 +337,7 @@ export const heroSpecializations: Record<string, HeroSpecialization> = {
     damageBonus: 20,
     speedBonus: 0,
     specialAbilities: ["fireball", "ice_shard", "lightning_bolt"],
-    unlockLevel: 3
+    unlockLevel: 3,
   },
   necromancer: {
     id: "necromancer",
@@ -276,7 +347,7 @@ export const heroSpecializations: Record<string, HeroSpecialization> = {
     damageBonus: 15,
     speedBonus: 0,
     specialAbilities: ["raise_skeleton", "drain_life", "curse"],
-    unlockLevel: 5
+    unlockLevel: 5,
   },
   enchanter: {
     id: "enchanter",
@@ -286,7 +357,7 @@ export const heroSpecializations: Record<string, HeroSpecialization> = {
     damageBonus: 8,
     speedBonus: 1,
     specialAbilities: ["enhance_weapon", "magic_shield", "haste"],
-    unlockLevel: 3
+    unlockLevel: 3,
   },
   // Rogue Specializations
   assassin: {
@@ -297,7 +368,7 @@ export const heroSpecializations: Record<string, HeroSpecialization> = {
     damageBonus: 18,
     speedBonus: 2,
     specialAbilities: ["backstab", "poison", "vanish"],
-    unlockLevel: 3
+    unlockLevel: 3,
   },
   thief: {
     id: "thief",
@@ -307,7 +378,7 @@ export const heroSpecializations: Record<string, HeroSpecialization> = {
     damageBonus: 8,
     speedBonus: 3,
     specialAbilities: ["steal", "lockpick", "sleight_of_hand"],
-    unlockLevel: 3
+    unlockLevel: 3,
   },
   shadowdancer: {
     id: "shadowdancer",
@@ -317,8 +388,8 @@ export const heroSpecializations: Record<string, HeroSpecialization> = {
     damageBonus: 12,
     speedBonus: 4,
     specialAbilities: ["shadow_step", "darkness", "shadow_clone"],
-    unlockLevel: 5
-  }
+    unlockLevel: 5,
+  },
 };
 
 export const EQUIPMENT: Record<string, Equipment> = {
@@ -332,7 +403,7 @@ export const EQUIPMENT: Record<string, Equipment> = {
     damageBonus: 8,
     speedBonus: 0,
     cost: 50,
-    description: "A sturdy iron blade"
+    description: "A sturdy iron blade",
   },
   steelSword: {
     id: "steel_sword",
@@ -343,7 +414,7 @@ export const EQUIPMENT: Record<string, Equipment> = {
     damageBonus: 15,
     speedBonus: 1,
     cost: 150,
-    description: "A masterwork steel blade"
+    description: "A masterwork steel blade",
   },
   enchantedBlade: {
     id: "enchanted_blade",
@@ -354,7 +425,7 @@ export const EQUIPMENT: Record<string, Equipment> = {
     damageBonus: 25,
     speedBonus: 2,
     cost: 500,
-    description: "A blade infused with magical energy"
+    description: "A blade infused with magical energy",
   },
   // Armor
   leatherArmor: {
@@ -366,7 +437,7 @@ export const EQUIPMENT: Record<string, Equipment> = {
     damageBonus: 0,
     speedBonus: 0,
     cost: 40,
-    description: "Basic leather protection"
+    description: "Basic leather protection",
   },
   chainmail: {
     id: "chainmail",
@@ -377,7 +448,7 @@ export const EQUIPMENT: Record<string, Equipment> = {
     damageBonus: 0,
     speedBonus: -1,
     cost: 120,
-    description: "Interlocked metal rings"
+    description: "Interlocked metal rings",
   },
   plateArmor: {
     id: "plate_armor",
@@ -388,7 +459,7 @@ export const EQUIPMENT: Record<string, Equipment> = {
     damageBonus: 5,
     speedBonus: -2,
     cost: 400,
-    description: "Full suit of plate armor"
+    description: "Full suit of plate armor",
   },
   // Accessories
   healthRing: {
@@ -400,7 +471,7 @@ export const EQUIPMENT: Record<string, Equipment> = {
     damageBonus: 0,
     speedBonus: 0,
     cost: 200,
-    description: "A ring that enhances life force"
+    description: "A ring that enhances life force",
   },
   speedBoots: {
     id: "speed_boots",
@@ -411,7 +482,7 @@ export const EQUIPMENT: Record<string, Equipment> = {
     damageBonus: 0,
     speedBonus: 3,
     cost: 180,
-    description: "Magical boots that enhance movement"
+    description: "Magical boots that enhance movement",
   },
   powerAmulet: {
     id: "power_amulet",
@@ -422,36 +493,77 @@ export const EQUIPMENT: Record<string, Equipment> = {
     damageBonus: 10,
     speedBonus: 1,
     cost: 350,
-    description: "An amulet radiating with power"
-  }
+    description: "An amulet radiating with power",
+  },
 };
 
 export const flagTypes: Record<string, FlagType> = {
   attack: { name: "Attack Flag", color: "#FF0000", symbol: "⚔️", baseCost: 50 },
-  explore: { name: "Explore Flag", color: "#00FF00", symbol: "🔍", baseCost: 30 },
-  defend: { name: "Defend Flag", color: "#0000FF", symbol: "🛡️", baseCost: 40 }
+  explore: {
+    name: "Explore Flag",
+    color: "#00FF00",
+    symbol: "🔍",
+    baseCost: 30,
+  },
+  defend: { name: "Defend Flag", color: "#0000FF", symbol: "🛡️", baseCost: 40 },
 };
 
 export const enemyTypes: Record<string, EnemyType> = {
-  goblin: { name: "Goblin", health: 40, damage: 8, reward: 20, color: "#228B22", symbol: "👹" },
-  orc: { name: "Orc", health: 60, damage: 12, reward: 35, color: "#8B0000", symbol: "👹" },
-  troll: { name: "Troll", health: 120, damage: 25, reward: 80, color: "#4B0082", symbol: "👹" }
+  goblin: {
+    name: "Goblin",
+    health: 40,
+    damage: 8,
+    reward: 20,
+    color: "#228B22",
+    symbol: "👹",
+  },
+  orc: {
+    name: "Orc",
+    health: 60,
+    damage: 12,
+    reward: 35,
+    color: "#8B0000",
+    symbol: "👹",
+  },
+  troll: {
+    name: "Troll",
+    health: 120,
+    damage: 25,
+    reward: 80,
+    color: "#4B0082",
+    symbol: "👹",
+  },
 };
 
 export const sampleQuests: Quest[] = [
   {
     id: "first_hero",
     title: "Recruit Your First Hero",
-    description: "Build a guild and recruit your first hero to begin your adventure",
+    description:
+      "Build a guild and recruit your first hero to begin your adventure",
     type: "build",
     objectives: [
-      { id: "build_guild", description: "Build any guild", type: "build", target: 1, current: 0, isCompleted: false },
-      { id: "recruit_hero", description: "Recruit a hero", type: "recruit", target: 1, current: 0, isCompleted: false }
+      {
+        id: "build_guild",
+        description: "Build any guild",
+        type: "build",
+        target: 1,
+        current: 0,
+        isCompleted: false,
+      },
+      {
+        id: "recruit_hero",
+        description: "Recruit a hero",
+        type: "recruit",
+        target: 1,
+        current: 0,
+        isCompleted: false,
+      },
     ],
     rewards: { gold: 100, supplies: 20 },
     isActive: true,
     isCompleted: false,
-    difficulty: "easy"
+    difficulty: "easy",
   },
   {
     id: "defeat_enemies",
@@ -459,12 +571,19 @@ export const sampleQuests: Quest[] = [
     description: "Eliminate 10 enemies that threaten your kingdom",
     type: "kill",
     objectives: [
-      { id: "kill_enemies", description: "Defeat 10 enemies", type: "kill", target: 10, current: 0, isCompleted: false }
+      {
+        id: "kill_enemies",
+        description: "Defeat 10 enemies",
+        type: "kill",
+        target: 10,
+        current: 0,
+        isCompleted: false,
+      },
     ],
     rewards: { gold: 200, mana: 50 },
     isActive: false,
     isCompleted: false,
-    difficulty: "medium"
+    difficulty: "medium",
   },
   {
     id: "level_up_hero",
@@ -472,13 +591,20 @@ export const sampleQuests: Quest[] = [
     description: "Train a hero to reach level 5",
     type: "collect",
     objectives: [
-      { id: "hero_level_5", description: "Get a hero to level 5", type: "level", target: 5, current: 0, isCompleted: false }
+      {
+        id: "hero_level_5",
+        description: "Get a hero to level 5",
+        type: "level",
+        target: 5,
+        current: 0,
+        isCompleted: false,
+      },
     ],
     rewards: { gold: 150, supplies: 30 },
     isActive: false,
     isCompleted: false,
-    difficulty: "medium"
-  }
+    difficulty: "medium",
+  },
 ];
 
 export const sampleAchievements: Achievement[] = [
@@ -491,7 +617,7 @@ export const sampleAchievements: Achievement[] = [
     rewards: { gold: 50 },
     isUnlocked: false,
     progress: { castleBuilt: 0 },
-    icon: "🏰"
+    icon: "🏰",
   },
   {
     id: "first_victory",
@@ -502,7 +628,7 @@ export const sampleAchievements: Achievement[] = [
     rewards: { gold: 100, supplies: 10 },
     isUnlocked: false,
     progress: { enemiesDefeated: 0 },
-    icon: "⚔️"
+    icon: "⚔️",
   },
   {
     id: "hero_master",
@@ -513,7 +639,7 @@ export const sampleAchievements: Achievement[] = [
     rewards: { gold: 500, mana: 100 },
     isUnlocked: false,
     progress: { simultaneousHeroes: 0 },
-    icon: "👑"
+    icon: "👑",
   },
   {
     id: "wealthy_kingdom",
@@ -524,7 +650,7 @@ export const sampleAchievements: Achievement[] = [
     rewards: { supplies: 200 },
     isUnlocked: false,
     progress: { goldAccumulated: 0 },
-    icon: "💰"
+    icon: "💰",
   },
   {
     id: "master_builder",
@@ -535,8 +661,8 @@ export const sampleAchievements: Achievement[] = [
     rewards: { gold: 1000, mana: 200 },
     isUnlocked: false,
     progress: { buildingsConstructed: 0 },
-    icon: "🔨"
-  }
+    icon: "🔨",
+  },
 ];
 
 // Game configuration constants
@@ -548,7 +674,7 @@ export const gameConfig = {
     mana: 50,
     supplies: 100,
     population: 0,
-    maxPopulation: 10
+    maxPopulation: 10,
   },
   INCOME_INTERVAL: 2000, // ms
   ENEMY_SPAWN_INTERVAL: 8000, // ms
@@ -562,5 +688,5 @@ export const gameConfig = {
   RELATIONSHIP_CHANGE_RATE: 1,
   COMBAT_ANIMATION_DURATION: 1000, // ms
   BUILDING_CONSTRUCTION_TIME: 3000, // ms
-  HERO_RESPAWN_TIME: 30000 // ms
+  HERO_RESPAWN_TIME: 30000, // ms
 } as const;
