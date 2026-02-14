@@ -28,7 +28,7 @@ export interface BuildingType {
   production: ResourceProduction;
   maxLevel: number;
   upgrades: BuildingUpgrade[];
-  category: "guild" | "economy" | "defense" | "special";
+  category: 'guild' | 'economy' | 'defense' | 'special';
   color: string;
   symbol: string;
   description: string;
@@ -98,7 +98,7 @@ export interface HeroSpecialization {
 
 export interface HeroRelationship {
   heroId: string;
-  relationshipType: "friendship" | "rivalry" | "romance";
+  relationshipType: 'friendship' | 'rivalry' | 'romance';
   strength: number; // -100 to 100
   history: string[];
 }
@@ -139,8 +139,8 @@ export interface Hero {
 export interface Equipment {
   id: string;
   name: string;
-  type: "weapon" | "armor" | "accessory";
-  rarity: "common" | "rare" | "epic" | "legendary";
+  type: 'weapon' | 'armor' | 'accessory';
+  rarity: 'common' | 'rare' | 'epic' | 'legendary';
   healthBonus: number;
   damageBonus: number;
   speedBonus: number;
@@ -167,7 +167,7 @@ export interface HeroSkills {
 export interface CombatRecord {
   timestamp: number;
   opponent: string;
-  result: "victory" | "defeat" | "retreat";
+  result: 'victory' | 'defeat' | 'retreat';
   experienceGained: number;
   goldGained: number;
   damageDealt: number;
@@ -221,14 +221,14 @@ export interface Quest {
   id: string;
   title: string;
   description: string;
-  type: "kill" | "build" | "explore" | "collect" | "survive";
+  type: 'kill' | 'build' | 'explore' | 'collect' | 'survive';
   objectives: QuestObjective[];
   rewards: ResourceCost;
   isActive: boolean;
   isCompleted: boolean;
   assignedHeroId?: string;
   timeLimit?: number;
-  difficulty: "easy" | "medium" | "hard" | "legendary";
+  difficulty: 'easy' | 'medium' | 'hard' | 'legendary';
 }
 
 export interface QuestObjective {
@@ -244,7 +244,7 @@ export interface Achievement {
   id: string;
   title: string;
   description: string;
-  category: "combat" | "building" | "heroes" | "economy" | "exploration";
+  category: 'combat' | 'building' | 'heroes' | 'economy' | 'exploration';
   requirements: Record<string, number>;
   rewards: ResourceCost;
   isUnlocked: boolean;
@@ -256,7 +256,7 @@ export interface GameEvent {
   id: string;
   title: string;
   description: string;
-  type: "random" | "quest" | "disaster" | "blessing";
+  type: 'random' | 'quest' | 'disaster' | 'blessing';
   effects: GameEventEffect[];
   choices?: GameEventChoice[];
   duration?: number;
@@ -264,7 +264,7 @@ export interface GameEvent {
 }
 
 export interface GameEventEffect {
-  type: "resource" | "hero_modifier" | "building_modifier" | "spawn_enemy";
+  type: 'resource' | 'hero_modifier' | 'building_modifier' | 'spawn_enemy';
   target?: string;
   value: number;
   duration?: number;
@@ -300,7 +300,7 @@ export interface GameState {
   gameTime: number;
   isGameOver: boolean;
   isPaused: boolean;
-  difficulty: "easy" | "normal" | "hard" | "nightmare";
+  difficulty: 'easy' | 'normal' | 'hard' | 'nightmare';
   nextHeroId: number;
   nextEnemyId: number;
   nextQuestId: number;
@@ -322,21 +322,21 @@ export interface GameStatistics {
 
 // Action types
 export type GameAction =
-  | { type: "SELECT_BUILDING"; buildingType: string }
-  | { type: "SELECT_FLAG"; flagType: string }
-  | { type: "CANCEL_SELECTION" }
-  | { type: "PLACE_BUILDING"; x: number; y: number }
-  | { type: "PLACE_FLAG"; x: number; y: number }
-  | { type: "SELECT_ENTITY"; entity: unknown; entityType: string }
-  | { type: "UPDATE_GAME_STATE"; updates: Partial<GameState> }
-  | { type: "RESTART_GAME" }
-  | { type: "LEVEL_UP_HERO"; heroId: string }
-  | { type: "ASSIGN_SPECIALIZATION"; heroId: string; specializationId: string }
-  | { type: "UPGRADE_BUILDING"; buildingId: string }
-  | { type: "EQUIP_ITEM"; heroId: string; equipmentId: string }
-  | { type: "START_QUEST"; questId: string; heroId?: string }
-  | { type: "COMPLETE_QUEST"; questId: string }
-  | { type: "TRIGGER_EVENT"; eventId: string }
-  | { type: "PAUSE_GAME" }
-  | { type: "SAVE_GAME"; slotId: number }
-  | { type: "LOAD_GAME"; slotId: number };
+  | { type: 'SELECT_BUILDING'; buildingType: string }
+  | { type: 'SELECT_FLAG'; flagType: string }
+  | { type: 'CANCEL_SELECTION' }
+  | { type: 'PLACE_BUILDING'; x: number; y: number }
+  | { type: 'PLACE_FLAG'; x: number; y: number }
+  | { type: 'SELECT_ENTITY'; entity: unknown; entityType: string }
+  | { type: 'UPDATE_GAME_STATE'; updates: Partial<GameState> }
+  | { type: 'RESTART_GAME' }
+  | { type: 'LEVEL_UP_HERO'; heroId: string }
+  | { type: 'ASSIGN_SPECIALIZATION'; heroId: string; specializationId: string }
+  | { type: 'UPGRADE_BUILDING'; buildingId: string }
+  | { type: 'EQUIP_ITEM'; heroId: string; equipmentId: string }
+  | { type: 'START_QUEST'; questId: string; heroId?: string }
+  | { type: 'COMPLETE_QUEST'; questId: string }
+  | { type: 'TRIGGER_EVENT'; eventId: string }
+  | { type: 'PAUSE_GAME' }
+  | { type: 'SAVE_GAME'; slotId: number }
+  | { type: 'LOAD_GAME'; slotId: number };

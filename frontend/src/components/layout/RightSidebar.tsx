@@ -1,41 +1,35 @@
-import React, { useState } from "react";
-import { useGameStore } from "../../stores/gameStore";
-import { useUIStore } from "../../stores/uiStore";
-import type { Building, Hero, Enemy, Flag } from "../../types/game";
-import HeroDetailsModal from "../ui/HeroDetailsModal";
-import BuildingUpgradeModal from "../ui/BuildingUpgradeModal";
-import QuestPanel from "../ui/QuestPanel";
-import AchievementPanel from "../ui/AchievementPanel";
-import SaveLoadMenu from "../ui/SaveLoadMenu";
+import React, { useState } from 'react';
+import { useGameStore } from '../../stores/gameStore';
+import { useUIStore } from '../../stores/uiStore';
+import type { Building, Hero, Enemy, Flag } from '../../types/game';
+import HeroDetailsModal from '../ui/HeroDetailsModal';
+import BuildingUpgradeModal from '../ui/BuildingUpgradeModal';
+import QuestPanel from '../ui/QuestPanel';
+import AchievementPanel from '../ui/AchievementPanel';
+import SaveLoadMenu from '../ui/SaveLoadMenu';
 
 const RightSidebar: React.FC = () => {
   const { heroes, pauseGame, resumeGame, isPaused } = useGameStore();
   const { selectedEntity, selectEntity } = useUIStore();
   const [activePanel, setActivePanel] = useState<
-    "info" | "quests" | "achievements" | "heroes" | "saves"
-  >("info");
+    'info' | 'quests' | 'achievements' | 'heroes' | 'saves'
+  >('info');
   const [selectedHero, setSelectedHero] = useState<Hero | null>(null);
-  const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(
-    null,
-  );
+  const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
   const [saveLoadMenu, setSaveLoadMenu] = useState<{
     isOpen: boolean;
-    mode: "save" | "load";
-  }>({ isOpen: false, mode: "save" });
+    mode: 'save' | 'load';
+  }>({ isOpen: false, mode: 'save' });
 
   const renderSelectedInfo = () => {
     if (!selectedEntity) {
-      return (
-        <p className="text-gray-500">
-          Click on a building, hero, or enemy to see details
-        </p>
-      );
+      return <p className="text-gray-500">Click on a building, hero, or enemy to see details</p>;
     }
 
     const { entity, type } = selectedEntity;
 
     switch (type) {
-      case "building": {
+      case 'building': {
         const building = entity as Building;
         return (
           <div className="space-y-3">
@@ -59,8 +53,7 @@ const RightSidebar: React.FC = () => {
                 <strong>Type:</strong> {building.type}
               </div>
               <div>
-                <strong>Health:</strong> {building.healthPoints}/
-                {building.maxHealthPoints}
+                <strong>Health:</strong> {building.healthPoints}/{building.maxHealthPoints}
               </div>
               <div>
                 <strong>Position:</strong> ({building.x}, {building.y})
@@ -68,16 +61,11 @@ const RightSidebar: React.FC = () => {
             </div>
             {building.production && (
               <div className="bg-green-50 p-2 rounded">
-                <div className="text-sm font-medium text-green-800 mb-1">
-                  Production:
-                </div>
+                <div className="text-sm font-medium text-green-800 mb-1">Production:</div>
                 <div className="text-xs text-green-700">
-                  {building.production.gold &&
-                    `💰 +${building.production.gold}/min`}
-                  {building.production.mana &&
-                    ` 🔮 +${building.production.mana}/min`}
-                  {building.production.supplies &&
-                    ` 📦 +${building.production.supplies}/min`}
+                  {building.production.gold && `💰 +${building.production.gold}/min`}
+                  {building.production.mana && ` 🔮 +${building.production.mana}/min`}
+                  {building.production.supplies && ` 📦 +${building.production.supplies}/min`}
                 </div>
               </div>
             )}
@@ -85,7 +73,7 @@ const RightSidebar: React.FC = () => {
         );
       }
 
-      case "hero": {
+      case 'hero': {
         const hero = entity as Hero;
         return (
           <div className="space-y-3">
@@ -131,10 +119,10 @@ const RightSidebar: React.FC = () => {
                 <span
                   className={`text-xs ${
                     hero.health / hero.maxHealth > 0.7
-                      ? "text-green-600"
+                      ? 'text-green-600'
                       : hero.health / hero.maxHealth > 0.3
-                        ? "text-yellow-600"
-                        : "text-red-600"
+                        ? 'text-yellow-600'
+                        : 'text-red-600'
                   }`}
                 >
                   {Math.round((hero.health / hero.maxHealth) * 100)}%
@@ -144,10 +132,10 @@ const RightSidebar: React.FC = () => {
                 <div
                   className={`h-2 rounded-full ${
                     hero.health / hero.maxHealth > 0.7
-                      ? "bg-green-500"
+                      ? 'bg-green-500'
                       : hero.health / hero.maxHealth > 0.3
-                        ? "bg-yellow-500"
-                        : "bg-red-500"
+                        ? 'bg-yellow-500'
+                        : 'bg-red-500'
                   }`}
                   style={{ width: `${(hero.health / hero.maxHealth) * 100}%` }}
                 />
@@ -173,9 +161,7 @@ const RightSidebar: React.FC = () => {
             {/* Status */}
             <div className="bg-blue-50 p-2 rounded">
               <div className="text-xs font-medium text-blue-800">Status:</div>
-              <div className="text-xs text-blue-700 capitalize">
-                {hero.lastAction}
-              </div>
+              <div className="text-xs text-blue-700 capitalize">{hero.lastAction}</div>
             </div>
 
             {/* Specialization */}
@@ -184,16 +170,14 @@ const RightSidebar: React.FC = () => {
                 <div className="text-xs font-medium text-purple-800">
                   {hero.specialization.name}
                 </div>
-                <div className="text-xs text-purple-600">
-                  {hero.specialization.description}
-                </div>
+                <div className="text-xs text-purple-600">{hero.specialization.description}</div>
               </div>
             )}
           </div>
         );
       }
 
-      case "enemy": {
+      case 'enemy': {
         const enemy = entity as Enemy;
         return (
           <div className="space-y-2">
@@ -214,7 +198,7 @@ const RightSidebar: React.FC = () => {
         );
       }
 
-      case "flag": {
+      case 'flag': {
         const flag = entity as Flag;
         return (
           <div className="space-y-2">
@@ -243,28 +227,21 @@ const RightSidebar: React.FC = () => {
       <div className="bg-white rounded-lg shadow-md p-2">
         <div className="flex gap-1">
           {[
-            { id: "info", label: "Info", icon: "ℹ️" },
-            { id: "heroes", label: "Heroes", icon: "🦸" },
-            { id: "quests", label: "Quests", icon: "📋" },
-            { id: "achievements", label: "Awards", icon: "🏆" },
-            { id: "saves", label: "Saves", icon: "💾" },
-          ].map((tab) => (
+            { id: 'info', label: 'Info', icon: 'ℹ️' },
+            { id: 'heroes', label: 'Heroes', icon: '🦸' },
+            { id: 'quests', label: 'Quests', icon: '📋' },
+            { id: 'achievements', label: 'Awards', icon: '🏆' },
+            { id: 'saves', label: 'Saves', icon: '💾' },
+          ].map(tab => (
             <button
               key={tab.id}
               onClick={() =>
-                setActivePanel(
-                  tab.id as
-                    | "info"
-                    | "heroes"
-                    | "quests"
-                    | "achievements"
-                    | "saves",
-                )
+                setActivePanel(tab.id as 'info' | 'heroes' | 'quests' | 'achievements' | 'saves')
               }
               className={`flex-1 py-2 px-2 rounded text-xs font-medium transition-colors ${
                 activePanel === tab.id
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
               <div className="text-sm">{tab.icon}</div>
@@ -276,7 +253,7 @@ const RightSidebar: React.FC = () => {
 
       {/* Panel Content */}
       <div className="bg-white rounded-lg shadow-md p-4 min-h-96">
-        {activePanel === "info" && (
+        {activePanel === 'info' && (
           <div>
             <h3 className="text-lg font-bold mb-4 text-gray-800 flex items-center gap-2">
               <span>ℹ️</span> Information
@@ -285,7 +262,7 @@ const RightSidebar: React.FC = () => {
           </div>
         )}
 
-        {activePanel === "heroes" && (
+        {activePanel === 'heroes' && (
           <div>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
@@ -296,11 +273,11 @@ const RightSidebar: React.FC = () => {
                   onClick={isPaused ? resumeGame : pauseGame}
                   className={`px-3 py-1 rounded text-sm font-medium ${
                     isPaused
-                      ? "bg-green-600 text-white hover:bg-green-700"
-                      : "bg-yellow-600 text-white hover:bg-yellow-700"
+                      ? 'bg-green-600 text-white hover:bg-green-700'
+                      : 'bg-yellow-600 text-white hover:bg-yellow-700'
                   }`}
                 >
-                  {isPaused ? "▶️ Resume" : "⏸️ Pause"}
+                  {isPaused ? '▶️ Resume' : '⏸️ Pause'}
                 </button>
               </div>
             </div>
@@ -312,20 +289,16 @@ const RightSidebar: React.FC = () => {
                   <p className="text-sm">Build a guild to recruit heroes!</p>
                 </div>
               ) : (
-                heroes.map((hero) => (
+                heroes.map(hero => (
                   <div
                     key={hero.id}
                     className="hero-item p-3 border border-gray-200 rounded cursor-pointer hover:bg-gray-50 transition-colors"
-                    onClick={() => selectEntity(hero, "hero")}
+                    onClick={() => selectEntity(hero, 'hero')}
                   >
                     <div className="flex items-center gap-3">
-                      <span className="hero-avatar text-2xl">
-                        {hero.symbol}
-                      </span>
+                      <span className="hero-avatar text-2xl">{hero.symbol}</span>
                       <div className="hero-details flex-1">
-                        <div className="hero-name font-medium text-sm">
-                          {hero.heroName}
-                        </div>
+                        <div className="hero-name font-medium text-sm">{hero.heroName}</div>
                         <div className="hero-class text-xs text-gray-600 mb-1">
                           Level {hero.level} {hero.className}
                         </div>
@@ -335,10 +308,10 @@ const RightSidebar: React.FC = () => {
                           <div
                             className={`h-1 rounded-full ${
                               hero.health / hero.maxHealth > 0.7
-                                ? "bg-green-500"
+                                ? 'bg-green-500'
                                 : hero.health / hero.maxHealth > 0.3
-                                  ? "bg-yellow-500"
-                                  : "bg-red-500"
+                                  ? 'bg-yellow-500'
+                                  : 'bg-red-500'
                             }`}
                             style={{
                               width: `${(hero.health / hero.maxHealth) * 100}%`,
@@ -362,11 +335,11 @@ const RightSidebar: React.FC = () => {
           </div>
         )}
 
-        {activePanel === "quests" && <QuestPanel />}
+        {activePanel === 'quests' && <QuestPanel />}
 
-        {activePanel === "achievements" && <AchievementPanel />}
+        {activePanel === 'achievements' && <AchievementPanel />}
 
-        {activePanel === "saves" && (
+        {activePanel === 'saves' && (
           <div>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
@@ -375,13 +348,13 @@ const RightSidebar: React.FC = () => {
             </div>
             <div className="space-y-2">
               <button
-                onClick={() => setSaveLoadMenu({ isOpen: true, mode: "save" })}
+                onClick={() => setSaveLoadMenu({ isOpen: true, mode: 'save' })}
                 className="w-full py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
               >
                 💾 Save Game
               </button>
               <button
-                onClick={() => setSaveLoadMenu({ isOpen: true, mode: "load" })}
+                onClick={() => setSaveLoadMenu({ isOpen: true, mode: 'load' })}
                 className="w-full py-3 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium"
               >
                 📁 Load Game
@@ -411,7 +384,7 @@ const RightSidebar: React.FC = () => {
       {saveLoadMenu.isOpen && (
         <SaveLoadMenu
           isOpen={saveLoadMenu.isOpen}
-          onClose={() => setSaveLoadMenu({ isOpen: false, mode: "save" })}
+          onClose={() => setSaveLoadMenu({ isOpen: false, mode: 'save' })}
           mode={saveLoadMenu.mode}
         />
       )}

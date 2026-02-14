@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import type { Hero, Equipment } from "../../types/game";
-import { useGameStore } from "../../stores/gameStore";
-import { heroSpecializations, EQUIPMENT } from "../../data/gameData";
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import type { Hero, Equipment } from '../../types/game';
+import { useGameStore } from '../../stores/gameStore';
+import { heroSpecializations, EQUIPMENT } from '../../data/gameData';
 
 interface HeroDetailsModalProps {
   hero: Hero;
@@ -10,26 +10,19 @@ interface HeroDetailsModalProps {
   onClose: () => void;
 }
 
-const HeroDetailsModal: React.FC<HeroDetailsModalProps> = ({
-  hero,
-  isOpen,
-  onClose,
-}) => {
-  const { levelUpHero, assignSpecialization, equipItem, canAfford } =
-    useGameStore();
-  const [activeTab, setActiveTab] = useState<
-    "stats" | "equipment" | "relationships"
-  >("stats");
+const HeroDetailsModal: React.FC<HeroDetailsModalProps> = ({ hero, isOpen, onClose }) => {
+  const { levelUpHero, assignSpecialization, equipItem, canAfford } = useGameStore();
+  const [activeTab, setActiveTab] = useState<'stats' | 'equipment' | 'relationships'>('stats');
 
   if (!isOpen) return null;
 
   const canLevelUp = hero.experience >= hero.experienceToNext;
   const availableSpecializations = Object.values(heroSpecializations).filter(
-    (spec) =>
+    spec =>
       hero.type &&
       spec.id.includes(hero.type) &&
       hero.level >= spec.unlockLevel &&
-      !hero.specialization,
+      !hero.specialization
   );
 
   const handleLevelUp = () => {
@@ -61,25 +54,20 @@ const HeroDetailsModal: React.FC<HeroDetailsModalProps> = ({
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.8, opacity: 0 }}
         className="bg-white rounded-lg p-6 max-w-2xl w-full m-4 max-h-[90vh] overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-gray-800">
             {hero.heroName} - Level {hero.level} {hero.className}
           </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-xl font-bold"
-          >
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700 text-xl font-bold">
             ×
           </button>
         </div>
 
         {/* Hero Avatar and Basic Stats */}
         <div className="flex items-center gap-4 mb-6">
-          <div className="text-4xl bg-gray-100 p-4 rounded-lg">
-            {hero.symbol}
-          </div>
+          <div className="text-4xl bg-gray-100 p-4 rounded-lg">{hero.symbol}</div>
           <div className="flex-1">
             <div className="grid grid-cols-2 gap-2 text-sm">
               <div>
@@ -133,21 +121,16 @@ const HeroDetailsModal: React.FC<HeroDetailsModalProps> = ({
         {/* Specialization Selection */}
         {availableSpecializations.length > 0 && (
           <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3">
-              Choose Specialization
-            </h3>
+            <h3 className="text-lg font-semibold mb-3">Choose Specialization</h3>
             <div className="grid grid-cols-1 gap-2">
-              {availableSpecializations.map((spec) => (
+              {availableSpecializations.map(spec => (
                 <div key={spec.id} className="border rounded-lg p-3">
                   <div className="flex justify-between items-start">
                     <div>
                       <h4 className="font-medium">{spec.name}</h4>
-                      <p className="text-sm text-gray-600">
-                        {spec.description}
-                      </p>
+                      <p className="text-sm text-gray-600">{spec.description}</p>
                       <div className="text-xs text-gray-500 mt-1">
-                        +{spec.healthBonus} HP, +{spec.damageBonus} DMG, +
-                        {spec.speedBonus} SPD
+                        +{spec.healthBonus} HP, +{spec.damageBonus} DMG, +{spec.speedBonus} SPD
                       </div>
                     </div>
                     <button
@@ -169,12 +152,9 @@ const HeroDetailsModal: React.FC<HeroDetailsModalProps> = ({
             <h3 className="text-lg font-semibold text-purple-800 mb-2">
               {hero.specialization.name}
             </h3>
-            <p className="text-purple-700 text-sm mb-2">
-              {hero.specialization.description}
-            </p>
+            <p className="text-purple-700 text-sm mb-2">{hero.specialization.description}</p>
             <div className="text-purple-600 text-xs">
-              Special Abilities:{" "}
-              {hero.specialization.specialAbilities.join(", ")}
+              Special Abilities: {hero.specialization.specialAbilities.join(', ')}
             </div>
           </div>
         )}
@@ -182,16 +162,14 @@ const HeroDetailsModal: React.FC<HeroDetailsModalProps> = ({
         {/* Tabs */}
         <div className="border-b mb-4">
           <div className="flex gap-4">
-            {["stats", "equipment", "relationships"].map((tab) => (
+            {['stats', 'equipment', 'relationships'].map(tab => (
               <button
                 key={tab}
-                onClick={() =>
-                  setActiveTab(tab as "stats" | "equipment" | "relationships")
-                }
+                onClick={() => setActiveTab(tab as 'stats' | 'equipment' | 'relationships')}
                 className={`py-2 px-4 capitalize ${
                   activeTab === tab
-                    ? "border-b-2 border-blue-600 text-blue-600"
-                    : "text-gray-600 hover:text-gray-800"
+                    ? 'border-b-2 border-blue-600 text-blue-600'
+                    : 'text-gray-600 hover:text-gray-800'
                 }`}
               >
                 {tab}
@@ -201,7 +179,7 @@ const HeroDetailsModal: React.FC<HeroDetailsModalProps> = ({
         </div>
 
         {/* Tab Content */}
-        {activeTab === "stats" && (
+        {activeTab === 'stats' && (
           <div>
             <h3 className="font-semibold mb-3">Skills</h3>
             <div className="grid grid-cols-2 gap-4">
@@ -215,23 +193,17 @@ const HeroDetailsModal: React.FC<HeroDetailsModalProps> = ({
           </div>
         )}
 
-        {activeTab === "equipment" && (
+        {activeTab === 'equipment' && (
           <div>
             <h3 className="font-semibold mb-3">Current Equipment</h3>
             <div className="grid grid-cols-3 gap-4 mb-4">
-              {(["weapon", "armor", "accessory"] as const).map((slot) => (
+              {(['weapon', 'armor', 'accessory'] as const).map(slot => (
                 <div key={slot} className="border rounded-lg p-3">
-                  <div className="text-sm text-gray-600 mb-1 capitalize">
-                    {slot}
-                  </div>
+                  <div className="text-sm text-gray-600 mb-1 capitalize">{slot}</div>
                   {hero.equipment[slot] ? (
                     <div className="text-sm">
-                      <div className="font-medium">
-                        {hero.equipment[slot]!.name}
-                      </div>
-                      <div className="text-xs text-gray-500">
-                        {hero.equipment[slot]!.rarity}
-                      </div>
+                      <div className="font-medium">{hero.equipment[slot]!.name}</div>
+                      <div className="text-xs text-gray-500">{hero.equipment[slot]!.rarity}</div>
                     </div>
                   ) : (
                     <div className="text-gray-400 text-sm">None equipped</div>
@@ -242,19 +214,15 @@ const HeroDetailsModal: React.FC<HeroDetailsModalProps> = ({
 
             <h4 className="font-medium mb-2">Available Equipment</h4>
             <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto">
-              {Object.values(EQUIPMENT).map((equipment) => (
+              {Object.values(EQUIPMENT).map(equipment => (
                 <div
                   key={equipment.id}
                   className="border rounded p-2 flex justify-between items-center"
                 >
                   <div>
                     <div className="font-medium text-sm">{equipment.name}</div>
-                    <div className="text-xs text-gray-600">
-                      {equipment.description}
-                    </div>
-                    <div className="text-xs text-green-600">
-                      {equipment.cost} gold
-                    </div>
+                    <div className="text-xs text-gray-600">{equipment.description}</div>
+                    <div className="text-xs text-green-600">{equipment.cost} gold</div>
                   </div>
                   <button
                     onClick={() => handleEquipItem(equipment)}
@@ -269,30 +237,28 @@ const HeroDetailsModal: React.FC<HeroDetailsModalProps> = ({
           </div>
         )}
 
-        {activeTab === "relationships" && (
+        {activeTab === 'relationships' && (
           <div>
             <h3 className="font-semibold mb-3">Relationships</h3>
             {hero.relationships.length > 0 ? (
               <div className="space-y-2">
-                {hero.relationships.map((rel) => (
+                {hero.relationships.map(rel => (
                   <div key={rel.heroId} className="border rounded p-2">
                     <div className="flex justify-between items-center">
                       <span className="font-medium">Hero {rel.heroId}</span>
                       <span
                         className={`px-2 py-1 rounded text-xs ${
-                          rel.relationshipType === "friendship"
-                            ? "bg-green-100 text-green-800"
-                            : rel.relationshipType === "rivalry"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-pink-100 text-pink-800"
+                          rel.relationshipType === 'friendship'
+                            ? 'bg-green-100 text-green-800'
+                            : rel.relationshipType === 'rivalry'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-pink-100 text-pink-800'
                         }`}
                       >
                         {rel.relationshipType}
                       </span>
                     </div>
-                    <div className="text-sm text-gray-600 mt-1">
-                      Strength: {rel.strength}/100
-                    </div>
+                    <div className="text-sm text-gray-600 mt-1">Strength: {rel.strength}/100</div>
                   </div>
                 ))}
               </div>

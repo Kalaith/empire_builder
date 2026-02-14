@@ -1,8 +1,8 @@
-import { useEffect, useCallback } from "react";
-import { useGameStore } from "../stores/gameStore";
-import { useUIStore } from "../stores/uiStore";
-import { gameConfig } from "../data/gameData";
-import type { Hero, Enemy, Flag, CombatRecord } from "../types/game";
+import { useEffect, useCallback } from 'react';
+import { useGameStore } from '../stores/gameStore';
+import { useUIStore } from '../stores/uiStore';
+import { gameConfig } from '../data/gameData';
+import type { Hero, Enemy, Flag, CombatRecord } from '../types/game';
 
 export const useGameLoop = () => {
   const {
@@ -28,23 +28,22 @@ export const useGameLoop = () => {
   // Find nearby entities for heroes
   const findNearbyEnemies = useCallback(
     (hero: Hero, range: number) => {
-      return enemies.filter((enemy) => {
-        const distance =
-          Math.abs(hero.x - enemy.x) + Math.abs(hero.y - enemy.y);
+      return enemies.filter(enemy => {
+        const distance = Math.abs(hero.x - enemy.x) + Math.abs(hero.y - enemy.y);
         return distance <= range;
       });
     },
-    [enemies],
+    [enemies]
   );
 
   const findNearbyFlags = useCallback(
     (hero: Hero, range: number) => {
-      return flags.filter((flag) => {
+      return flags.filter(flag => {
         const distance = Math.abs(hero.x - flag.x) + Math.abs(hero.y - flag.y);
         return distance <= range;
       });
     },
-    [flags],
+    [flags]
   );
 
   // Move hero towards target
@@ -74,7 +73,7 @@ export const useGameLoop = () => {
 
       return false;
     },
-    [grid, gridWidth, gridHeight, updateHeroPosition],
+    [grid, gridWidth, gridHeight, updateHeroPosition]
   );
 
   // Move enemy towards target
@@ -104,7 +103,7 @@ export const useGameLoop = () => {
 
       return false;
     },
-    [grid, gridWidth, gridHeight, updateEnemyPosition],
+    [grid, gridWidth, gridHeight, updateEnemyPosition]
   );
 
   // Calculate position-based combat bonuses
@@ -114,8 +113,7 @@ export const useGameLoop = () => {
 
       // High ground advantage (buildings provide elevation)
       const nearbyBuildings = buildings.filter(
-        (b) =>
-          Math.abs(b.x - attacker.x) <= 1 && Math.abs(b.y - attacker.y) <= 1,
+        b => Math.abs(b.x - attacker.x) <= 1 && Math.abs(b.y - attacker.y) <= 1
       );
       if (nearbyBuildings.length > 0) bonus += 0.1; // 10% bonus
 
@@ -123,26 +121,21 @@ export const useGameLoop = () => {
       const oppositeX = defender.x + (defender.x - attacker.x);
       const oppositeY = defender.y + (defender.y - attacker.y);
       const flankingHero = heroes.find(
-        (h) =>
-          h.id !== attacker.id &&
-          Math.abs(h.x - oppositeX) <= 1 &&
-          Math.abs(h.y - oppositeY) <= 1,
+        h =>
+          h.id !== attacker.id && Math.abs(h.x - oppositeX) <= 1 && Math.abs(h.y - oppositeY) <= 1
       );
       if (flankingHero) bonus += 0.15; // 15% flanking bonus
 
       return bonus;
     },
-    [buildings, heroes],
+    [buildings, heroes]
   );
 
   // Calculate formation bonuses for grouped heroes
   const getFormationBonus = useCallback(
     (hero: Hero) => {
       const nearbyHeroes = heroes.filter(
-        (h) =>
-          h.id !== hero.id &&
-          Math.abs(h.x - hero.x) <= 2 &&
-          Math.abs(h.y - hero.y) <= 2,
+        h => h.id !== hero.id && Math.abs(h.x - hero.x) <= 2 && Math.abs(h.y - hero.y) <= 2
       );
 
       let bonus = 0;
@@ -151,12 +144,12 @@ export const useGameLoop = () => {
       if (nearbyHeroes.length >= 3) bonus += 0.1; // Additional 10% for 3+ heroes
 
       // Class synergy bonuses
-      const uniqueClasses = new Set(nearbyHeroes.map((h) => h.type));
+      const uniqueClasses = new Set(nearbyHeroes.map(h => h.type));
       if (uniqueClasses.size >= 2) bonus += 0.1; // Mixed group bonus
 
       return Math.min(bonus, 0.5); // Cap at 50% bonus
     },
-    [heroes],
+    [heroes]
   );
 
   // Check for critical hit
@@ -164,15 +157,15 @@ export const useGameLoop = () => {
     let critChance = 0.05; // Base 5% crit chance
 
     // Rogue class bonus
-    if (attacker.type === "rogue") critChance += 0.1;
+    if (attacker.type === 'rogue') critChance += 0.1;
 
     // Equipment bonuses
-    if (attacker.equipment.weapon?.rarity === "epic") critChance += 0.05;
-    if (attacker.equipment.weapon?.rarity === "legendary") critChance += 0.1;
+    if (attacker.equipment.weapon?.rarity === 'epic') critChance += 0.05;
+    if (attacker.equipment.weapon?.rarity === 'legendary') critChance += 0.1;
 
     // Specialization bonuses
-    if (attacker.specialization?.id === "assassin") critChance += 0.15;
-    if (attacker.specialization?.id === "hunter") critChance += 0.1;
+    if (attacker.specialization?.id === 'assassin') critChance += 0.15;
+    if (attacker.specialization?.id === 'hunter') critChance += 0.1;
 
     return Math.random() < critChance;
   }, []);
@@ -191,10 +184,8 @@ export const useGameLoop = () => {
       let heroDamage = hero.damage;
 
       // Apply equipment bonuses
-      if (hero.equipment.weapon)
-        heroDamage += hero.equipment.weapon.damageBonus;
-      if (hero.equipment.accessory)
-        heroDamage += hero.equipment.accessory.damageBonus;
+      if (hero.equipment.weapon) heroDamage += hero.equipment.weapon.damageBonus;
+      if (hero.equipment.accessory) heroDamage += hero.equipment.accessory.damageBonus;
 
       // Apply strategic bonuses
       heroDamage *= 1 + positionBonus + formationBonus;
@@ -202,7 +193,7 @@ export const useGameLoop = () => {
       // Critical hit multiplier
       if (isCritical) {
         heroDamage *= 2;
-        addGameMessage(`💥 ${hero.heroName} landed a CRITICAL HIT!`, "success");
+        addGameMessage(`💥 ${hero.heroName} landed a CRITICAL HIT!`, 'success');
       }
 
       // Add some randomness
@@ -223,19 +214,16 @@ export const useGameLoop = () => {
         hero.gold += goldGained;
 
         let defeatMessage = `⚔️ ${hero.heroName} defeated ${enemy.name}!`;
-        if (positionBonus > 0) defeatMessage += " (Position advantage!)";
-        if (formationBonus > 0) defeatMessage += " (Formation bonus!)";
+        if (positionBonus > 0) defeatMessage += ' (Position advantage!)';
+        if (formationBonus > 0) defeatMessage += ' (Formation bonus!)';
 
-        addGameMessage(
-          defeatMessage + ` +${goldGained} gold, +${experienceGained} XP`,
-          "success",
-        );
+        addGameMessage(defeatMessage + ` +${goldGained} gold, +${experienceGained} XP`, 'success');
 
         // Create combat record
         const combatRecord: CombatRecord = {
           timestamp: startTime,
           opponent: enemy.name,
-          result: "victory",
+          result: 'victory',
           experienceGained,
           goldGained,
           damageDealt: finalHeroDamage,
@@ -247,7 +235,7 @@ export const useGameLoop = () => {
 
         // Update statistics and achievements
         updateStatistics({ totalEnemiesDefeated: 1 });
-        updateAchievementProgress("first_victory", { enemiesDefeated: 1 });
+        updateAchievementProgress('first_victory', { enemiesDefeated: 1 });
 
         return;
       }
@@ -262,10 +250,10 @@ export const useGameLoop = () => {
       }
 
       // Warrior class defensive bonus
-      if (hero.type === "warrior") damageReduction += 0.1;
+      if (hero.type === 'warrior') damageReduction += 0.1;
 
       // Guardian specialization bonus
-      if (hero.specialization?.id === "guardian") damageReduction += 0.2;
+      if (hero.specialization?.id === 'guardian') damageReduction += 0.2;
 
       // Apply damage reduction
       enemyDamage *= Math.max(0.1, 1 - damageReduction); // Minimum 10% damage gets through
@@ -276,16 +264,13 @@ export const useGameLoop = () => {
 
       if (hero.health <= 0) {
         // Hero defeated
-        addGameMessage(
-          `💀 ${hero.heroName} was defeated by ${enemy.name}!`,
-          "error",
-        );
+        addGameMessage(`💀 ${hero.heroName} was defeated by ${enemy.name}!`, 'error');
 
         // Create combat record for defeat
         const defeatRecord: CombatRecord = {
           timestamp: startTime,
           opponent: enemy.name,
-          result: "defeat",
+          result: 'defeat',
           experienceGained: 0,
           goldGained: 0,
           damageDealt: finalHeroDamage,
@@ -303,7 +288,7 @@ export const useGameLoop = () => {
         combatMessage += `, ${enemy.name} retaliated for ${finalEnemyDamage} damage`;
       }
 
-      addGameMessage(combatMessage, "info");
+      addGameMessage(combatMessage, 'info');
 
       // Small experience gain for ongoing combat
       experienceGained = Math.floor(finalHeroDamage * 0.1);
@@ -311,7 +296,7 @@ export const useGameLoop = () => {
       const ongoingRecord: CombatRecord = {
         timestamp: startTime,
         opponent: enemy.name,
-        result: "retreat", // Ongoing combat
+        result: 'retreat', // Ongoing combat
         experienceGained,
         goldGained: 0,
         damageDealt: finalHeroDamage,
@@ -330,7 +315,7 @@ export const useGameLoop = () => {
       checkCriticalHit,
       updateStatistics,
       updateAchievementProgress,
-    ],
+    ]
   );
 
   // Enhanced strategic hero AI
@@ -338,20 +323,16 @@ export const useGameLoop = () => {
     (hero: Hero) => {
       // Skip if hero is low on morale
       if (hero.morale < 20) {
-        hero.lastAction = "resting (low morale)";
+        hero.lastAction = 'resting (low morale)';
         return;
       }
 
       // Find nearby entities with extended ranges based on hero type
-      const sightRange =
-        hero.type === "ranger" ? 6 : hero.type === "wizard" ? 5 : 4;
+      const sightRange = hero.type === 'ranger' ? 6 : hero.type === 'wizard' ? 5 : 4;
       const nearbyEnemies = findNearbyEnemies(hero, sightRange);
       const nearbyFlags = findNearbyFlags(hero, sightRange + 2);
       const nearbyHeroes = heroes.filter(
-        (h) =>
-          h.id !== hero.id &&
-          Math.abs(h.x - hero.x) <= 3 &&
-          Math.abs(h.y - hero.y) <= 3,
+        h => h.id !== hero.id && Math.abs(h.x - hero.x) <= 3 && Math.abs(h.y - hero.y) <= 3
       );
 
       // Health-based decision making
@@ -363,10 +344,9 @@ export const useGameLoop = () => {
       let bestTarget: Enemy | null = null;
       let bestTargetScore = -1;
 
-      nearbyEnemies.forEach((enemy) => {
+      nearbyEnemies.forEach(enemy => {
         let score = 0;
-        const distance =
-          Math.abs(hero.x - enemy.x) + Math.abs(hero.y - enemy.y);
+        const distance = Math.abs(hero.x - enemy.x) + Math.abs(hero.y - enemy.y);
 
         // Prefer closer enemies
         score += 10 - distance;
@@ -376,11 +356,10 @@ export const useGameLoop = () => {
         if (hero.damage * 2 > enemy.health) score += 10; // Can kill in 2 hits
 
         // Class preferences
-        if (hero.type === "warrior" && enemy.damage > 15) score += 5; // Warriors like tough enemies
-        if (hero.type === "rogue" && enemy.health < hero.damage * 1.5)
-          score += 10; // Rogues like weak enemies
-        if (hero.type === "ranger" && distance > 2) score += 5; // Rangers prefer ranged engagement
-        if (hero.type === "wizard" && nearbyEnemies.length > 1) score += 8; // Wizards like group combat
+        if (hero.type === 'warrior' && enemy.damage > 15) score += 5; // Warriors like tough enemies
+        if (hero.type === 'rogue' && enemy.health < hero.damage * 1.5) score += 10; // Rogues like weak enemies
+        if (hero.type === 'ranger' && distance > 2) score += 5; // Rangers prefer ranged engagement
+        if (hero.type === 'wizard' && nearbyEnemies.length > 1) score += 8; // Wizards like group combat
 
         // Tactical bonuses
         const positionBonus = getPositionBonus(hero, enemy);
@@ -397,7 +376,7 @@ export const useGameLoop = () => {
       let targetFlag: Flag | null = null;
       let bestFlagScore = -1;
 
-      nearbyFlags.forEach((flag) => {
+      nearbyFlags.forEach(flag => {
         let score = 0;
         const distance = Math.abs(hero.x - flag.x) + Math.abs(hero.y - flag.y);
 
@@ -408,9 +387,9 @@ export const useGameLoop = () => {
         if (hero.preferences.includes(flag.type)) score += 15;
 
         // Situational bonuses
-        if (flag.type === "attack" && nearbyEnemies.length > 0) score += 10;
-        if (flag.type === "defend" && nearbyEnemies.length > 2) score += 12;
-        if (flag.type === "explore" && nearbyEnemies.length === 0) score += 8;
+        if (flag.type === 'attack' && nearbyEnemies.length > 0) score += 10;
+        if (flag.type === 'defend' && nearbyEnemies.length > 2) score += 12;
+        if (flag.type === 'explore' && nearbyEnemies.length === 0) score += 8;
 
         // Resource needs
         if (hero.gold < 50) score += 5;
@@ -425,21 +404,18 @@ export const useGameLoop = () => {
       // Decision making logic
       if (shouldRetreat && nearbyEnemies.length > 0) {
         // Retreat behavior - move away from enemies
-        const threatX =
-          nearbyEnemies.reduce((sum, e) => sum + e.x, 0) / nearbyEnemies.length;
-        const threatY =
-          nearbyEnemies.reduce((sum, e) => sum + e.y, 0) / nearbyEnemies.length;
+        const threatX = nearbyEnemies.reduce((sum, e) => sum + e.x, 0) / nearbyEnemies.length;
+        const threatY = nearbyEnemies.reduce((sum, e) => sum + e.y, 0) / nearbyEnemies.length;
 
         const retreatX = hero.x + (hero.x - threatX > 0 ? 1 : -1);
         const retreatY = hero.y + (hero.y - threatY > 0 ? 1 : -1);
 
         moveHeroTowards(hero, retreatX, retreatY);
-        hero.lastAction = "retreating";
+        hero.lastAction = 'retreating';
       } else if (bestTarget && (shouldBeAggressive || bestTargetScore > 15)) {
         // Engage in combat
         const target = bestTarget as Enemy;
-        const distance =
-          Math.abs(hero.x - target.x) + Math.abs(hero.y - target.y);
+        const distance = Math.abs(hero.x - target.x) + Math.abs(hero.y - target.y);
 
         if (distance === 1) {
           // Adjacent - attack
@@ -456,38 +432,34 @@ export const useGameLoop = () => {
             { x: target.x, y: target.y + 1 },
             { x: target.x, y: target.y - 1 },
           ].filter(
-            (pos) =>
+            pos =>
               pos.x >= 0 &&
               pos.x < gridWidth &&
               pos.y >= 0 &&
               pos.y < gridHeight &&
               !grid[pos.y][pos.x].building &&
               !grid[pos.y][pos.x].hero &&
-              !grid[pos.y][pos.x].enemy,
+              !grid[pos.y][pos.x].enemy
           );
 
           if (possiblePositions.length > 0) {
             // Choose position with best tactical advantage
             const bestPosition = possiblePositions.reduce((best, pos) => {
               const nearbyBuildingCount = buildings.filter(
-                (b) => Math.abs(b.x - pos.x) <= 1 && Math.abs(b.y - pos.y) <= 1,
+                b => Math.abs(b.x - pos.x) <= 1 && Math.abs(b.y - pos.y) <= 1
               ).length;
 
               const nearbyHeroCount = nearbyHeroes.filter(
-                (h) => Math.abs(h.x - pos.x) <= 2 && Math.abs(h.y - pos.y) <= 2,
+                h => Math.abs(h.x - pos.x) <= 2 && Math.abs(h.y - pos.y) <= 2
               ).length;
 
               const posScore = nearbyBuildingCount * 2 + nearbyHeroCount;
               const bestScore =
-                buildings.filter(
-                  (b) =>
-                    Math.abs(b.x - best.x) <= 1 && Math.abs(b.y - best.y) <= 1,
-                ).length *
+                buildings.filter(b => Math.abs(b.x - best.x) <= 1 && Math.abs(b.y - best.y) <= 1)
+                  .length *
                   2 +
-                nearbyHeroes.filter(
-                  (h) =>
-                    Math.abs(h.x - best.x) <= 2 && Math.abs(h.y - best.y) <= 2,
-                ).length;
+                nearbyHeroes.filter(h => Math.abs(h.x - best.x) <= 2 && Math.abs(h.y - best.y) <= 2)
+                  .length;
 
               return posScore > bestScore ? pos : best;
             });
@@ -510,7 +482,7 @@ export const useGameLoop = () => {
           hero.gold += flag.reward;
           addGameMessage(
             `${hero.heroName} collected ${flag.reward} gold from ${flag.name}!`,
-            "success",
+            'success'
           );
           removeFlag(flag);
           hero.lastAction = `collected ${flag.name}`;
@@ -526,14 +498,11 @@ export const useGameLoop = () => {
         if (!patrolSuccess && nearbyHeroes.length === 0) {
           // Move to support other heroes
           const distantHeroes = heroes.filter(
-            (h) =>
-              h.id !== hero.id &&
-              Math.abs(h.x - hero.x) + Math.abs(h.y - hero.y) > 5,
+            h => h.id !== hero.id && Math.abs(h.x - hero.x) + Math.abs(h.y - hero.y) > 5
           );
 
           if (distantHeroes.length > 0) {
-            const supportTarget =
-              distantHeroes[Math.floor(Math.random() * distantHeroes.length)];
+            const supportTarget = distantHeroes[Math.floor(Math.random() * distantHeroes.length)];
             moveHeroTowards(hero, supportTarget.x, supportTarget.y);
             hero.lastAction = `moving to support ${supportTarget.heroName}`;
           } else {
@@ -546,26 +515,24 @@ export const useGameLoop = () => {
                 { x: hero.x, y: hero.y - 1 },
               ];
               const validDirections = directions.filter(
-                (dir) =>
+                dir =>
                   dir.x >= 0 &&
                   dir.x < gridWidth &&
                   dir.y >= 0 &&
                   dir.y < gridHeight &&
                   !grid[dir.y][dir.x].building &&
-                  !grid[dir.y][dir.x].hero,
+                  !grid[dir.y][dir.x].hero
               );
               if (validDirections.length > 0) {
                 const randomDir =
-                  validDirections[
-                    Math.floor(Math.random() * validDirections.length)
-                  ];
+                  validDirections[Math.floor(Math.random() * validDirections.length)];
                 moveHeroTowards(hero, randomDir.x, randomDir.y);
-                hero.lastAction = "patrolling";
+                hero.lastAction = 'patrolling';
               } else {
-                hero.lastAction = "standing guard";
+                hero.lastAction = 'standing guard';
               }
             } else {
-              hero.lastAction = "standing guard";
+              hero.lastAction = 'standing guard';
             }
           }
         }
@@ -585,14 +552,14 @@ export const useGameLoop = () => {
       buildings,
       getPositionBonus,
       getFormationBonus,
-    ],
+    ]
   );
 
   // Update enemy AI
   const updateEnemyAI = useCallback(
     (enemy: Enemy) => {
       // Find nearest building to attack
-      const castle = buildings.find((b) => b.type === "castle");
+      const castle = buildings.find(b => b.type === 'castle');
       if (castle) {
         if (Math.abs(enemy.x - castle.x) + Math.abs(enemy.y - castle.y) === 1) {
           // Adjacent to castle - game over
@@ -603,14 +570,14 @@ export const useGameLoop = () => {
         }
       }
     },
-    [buildings, moveEnemyTowards, setShowGameOverModal],
+    [buildings, moveEnemyTowards, setShowGameOverModal]
   );
 
   // Main game loop
   useEffect(() => {
     const gameLoop = setInterval(() => {
       // Update heroes
-      heroes.forEach((hero) => {
+      heroes.forEach(hero => {
         if (Math.random() < 0.7) {
           // 70% chance to act each turn
           updateHeroAI(hero);
@@ -618,7 +585,7 @@ export const useGameLoop = () => {
       });
 
       // Update enemies
-      enemies.forEach((enemy) => {
+      enemies.forEach(enemy => {
         if (Math.random() < 0.5) {
           // 50% chance to move each turn
           updateEnemyAI(enemy);

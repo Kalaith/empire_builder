@@ -1,61 +1,60 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 // import type { Achievement } from '../../types/game';
-import { useGameStore } from "../../stores/gameStore";
+import { useGameStore } from '../../stores/gameStore';
 
 const AchievementPanel: React.FC = () => {
   const { achievements } = useGameStore();
-  const [filter, setFilter] = useState<"all" | "unlocked" | "locked">("all");
+  const [filter, setFilter] = useState<'all' | 'unlocked' | 'locked'>('all');
   const [categoryFilter, setCategoryFilter] = useState<
-    "all" | "combat" | "building" | "heroes" | "economy" | "exploration"
-  >("all");
+    'all' | 'combat' | 'building' | 'heroes' | 'economy' | 'exploration'
+  >('all');
 
-  const filteredAchievements = achievements.filter((achievement) => {
+  const filteredAchievements = achievements.filter(achievement => {
     const statusMatch =
-      filter === "all" ||
-      (filter === "unlocked" && achievement.isUnlocked) ||
-      (filter === "locked" && !achievement.isUnlocked);
+      filter === 'all' ||
+      (filter === 'unlocked' && achievement.isUnlocked) ||
+      (filter === 'locked' && !achievement.isUnlocked);
 
-    const categoryMatch =
-      categoryFilter === "all" || achievement.category === categoryFilter;
+    const categoryMatch = categoryFilter === 'all' || achievement.category === categoryFilter;
 
     return statusMatch && categoryMatch;
   });
 
-  const unlockedCount = achievements.filter((a) => a.isUnlocked).length;
+  const unlockedCount = achievements.filter(a => a.isUnlocked).length;
   const totalCount = achievements.length;
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case "combat":
-        return "⚔️";
-      case "building":
-        return "🏗️";
-      case "heroes":
-        return "👑";
-      case "economy":
-        return "💰";
-      case "exploration":
-        return "🗺️";
+      case 'combat':
+        return '⚔️';
+      case 'building':
+        return '🏗️';
+      case 'heroes':
+        return '👑';
+      case 'economy':
+        return '💰';
+      case 'exploration':
+        return '🗺️';
       default:
-        return "🏆";
+        return '🏆';
     }
   };
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case "combat":
-        return "text-red-600 bg-red-100";
-      case "building":
-        return "text-blue-600 bg-blue-100";
-      case "heroes":
-        return "text-purple-600 bg-purple-100";
-      case "economy":
-        return "text-green-600 bg-green-100";
-      case "exploration":
-        return "text-yellow-600 bg-yellow-100";
+      case 'combat':
+        return 'text-red-600 bg-red-100';
+      case 'building':
+        return 'text-blue-600 bg-blue-100';
+      case 'heroes':
+        return 'text-purple-600 bg-purple-100';
+      case 'economy':
+        return 'text-green-600 bg-green-100';
+      case 'exploration':
+        return 'text-yellow-600 bg-yellow-100';
       default:
-        return "text-gray-600 bg-gray-100";
+        return 'text-gray-600 bg-gray-100';
     }
   };
 
@@ -76,8 +75,8 @@ const AchievementPanel: React.FC = () => {
         <div>
           <h2 className="text-xl font-bold text-gray-800">Achievements</h2>
           <p className="text-sm text-gray-600">
-            {unlockedCount}/{totalCount} unlocked (
-            {Math.round((unlockedCount / totalCount) * 100)}%)
+            {unlockedCount}/{totalCount} unlocked ({Math.round((unlockedCount / totalCount) * 100)}
+            %)
           </p>
         </div>
 
@@ -99,14 +98,14 @@ const AchievementPanel: React.FC = () => {
       {/* Filters */}
       <div className="flex flex-col gap-2 mb-4">
         <div className="flex gap-1 flex-wrap">
-          {(["all", "unlocked", "locked"] as const).map((filterType) => (
+          {(['all', 'unlocked', 'locked'] as const).map(filterType => (
             <button
               key={filterType}
               onClick={() => setFilter(filterType)}
               className={`px-2 py-1 text-xs rounded capitalize ${
                 filter === filterType
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
               {filterType}
@@ -115,29 +114,22 @@ const AchievementPanel: React.FC = () => {
         </div>
 
         <div className="flex gap-1 flex-wrap">
-          {(
-            [
-              "all",
-              "combat",
-              "building",
-              "heroes",
-              "economy",
-              "exploration",
-            ] as const
-          ).map((category) => (
-            <button
-              key={category}
-              onClick={() => setCategoryFilter(category)}
-              className={`px-2 py-1 text-xs rounded capitalize flex items-center gap-1 ${
-                categoryFilter === category
-                  ? "bg-purple-600 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              <span>{getCategoryIcon(category)}</span>
-              {category}
-            </button>
-          ))}
+          {(['all', 'combat', 'building', 'heroes', 'economy', 'exploration'] as const).map(
+            category => (
+              <button
+                key={category}
+                onClick={() => setCategoryFilter(category)}
+                className={`px-2 py-1 text-xs rounded capitalize flex items-center gap-1 ${
+                  categoryFilter === category
+                    ? 'bg-purple-600 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                <span>{getCategoryIcon(category)}</span>
+                {category}
+              </button>
+            )
+          )}
         </div>
       </div>
 
@@ -151,18 +143,18 @@ const AchievementPanel: React.FC = () => {
             transition={{ delay: index * 0.05 }}
             className={`achievement-item border rounded-lg p-3 ${
               achievement.isUnlocked
-                ? "border-yellow-300 bg-gradient-to-r from-yellow-50 to-yellow-100"
-                : "border-gray-200 bg-white opacity-75"
+                ? 'border-yellow-300 bg-gradient-to-r from-yellow-50 to-yellow-100'
+                : 'border-gray-200 bg-white opacity-75'
             }`}
           >
             <div className="flex items-start gap-3">
               {/* Achievement Icon */}
               <div
                 className={`text-2xl p-2 rounded-lg ${
-                  achievement.isUnlocked ? "bg-yellow-200" : "bg-gray-100"
+                  achievement.isUnlocked ? 'bg-yellow-200' : 'bg-gray-100'
                 }`}
               >
-                {achievement.isUnlocked ? "🏆" : achievement.icon}
+                {achievement.isUnlocked ? '🏆' : achievement.icon}
               </div>
 
               <div className="flex-1">
@@ -170,15 +162,14 @@ const AchievementPanel: React.FC = () => {
                 <div className="flex justify-between items-start mb-2">
                   <div>
                     <h3
-                      className={`font-medium ${achievement.isUnlocked ? "text-yellow-800" : "text-gray-600"}`}
+                      className={`font-medium ${achievement.isUnlocked ? 'text-yellow-800' : 'text-gray-600'}`}
                     >
                       {achievement.title}
                     </h3>
                     <span
                       className={`inline-block px-2 py-1 rounded text-xs ${getCategoryColor(achievement.category)}`}
                     >
-                      {getCategoryIcon(achievement.category)}{" "}
-                      {achievement.category}
+                      {getCategoryIcon(achievement.category)} {achievement.category}
                     </span>
                   </div>
 
@@ -194,7 +185,7 @@ const AchievementPanel: React.FC = () => {
                 </div>
 
                 <p
-                  className={`text-sm mb-3 ${achievement.isUnlocked ? "text-gray-700" : "text-gray-500"}`}
+                  className={`text-sm mb-3 ${achievement.isUnlocked ? 'text-gray-700' : 'text-gray-500'}`}
                 >
                   {achievement.description}
                 </p>
@@ -202,34 +193,29 @@ const AchievementPanel: React.FC = () => {
                 {/* Progress */}
                 {!achievement.isUnlocked && (
                   <div className="space-y-2 mb-3">
-                    {Object.entries(achievement.requirements).map(
-                      ([key, required]) => {
-                        const current = achievement.progress[key] || 0;
-                        const percentage = Math.min(
-                          (current / required) * 100,
-                          100,
-                        );
+                    {Object.entries(achievement.requirements).map(([key, required]) => {
+                      const current = achievement.progress[key] || 0;
+                      const percentage = Math.min((current / required) * 100, 100);
 
-                        return (
-                          <div key={key} className="text-xs">
-                            <div className="flex justify-between mb-1">
-                              <span className="text-gray-600 capitalize">
-                                {key.replace(/([A-Z])/g, " $1").trim()}
-                              </span>
-                              <span className="text-gray-500">
-                                {current}/{required}
-                              </span>
-                            </div>
-                            <div className="w-full bg-gray-200 rounded-full h-2">
-                              <div
-                                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                                style={{ width: `${percentage}%` }}
-                              />
-                            </div>
+                      return (
+                        <div key={key} className="text-xs">
+                          <div className="flex justify-between mb-1">
+                            <span className="text-gray-600 capitalize">
+                              {key.replace(/([A-Z])/g, ' $1').trim()}
+                            </span>
+                            <span className="text-gray-500">
+                              {current}/{required}
+                            </span>
                           </div>
-                        );
-                      },
-                    )}
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
 
@@ -237,19 +223,13 @@ const AchievementPanel: React.FC = () => {
                 <div className="rewards flex gap-2 text-xs">
                   <span className="text-gray-600">Rewards:</span>
                   {achievement.rewards.gold && (
-                    <span className="text-yellow-600">
-                      💰{achievement.rewards.gold}
-                    </span>
+                    <span className="text-yellow-600">💰{achievement.rewards.gold}</span>
                   )}
                   {achievement.rewards.mana && (
-                    <span className="text-blue-600">
-                      🔮{achievement.rewards.mana}
-                    </span>
+                    <span className="text-blue-600">🔮{achievement.rewards.mana}</span>
                   )}
                   {achievement.rewards.supplies && (
-                    <span className="text-green-600">
-                      📦{achievement.rewards.supplies}
-                    </span>
+                    <span className="text-green-600">📦{achievement.rewards.supplies}</span>
                   )}
                 </div>
               </div>

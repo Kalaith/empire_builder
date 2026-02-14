@@ -1,17 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { useGameStore } from "../../stores/gameStore";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect } from 'react';
+import { useGameStore } from '../../stores/gameStore';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const TopBar: React.FC = () => {
-  const {
-    resources,
-    heroes,
-    buildings,
-    enemies,
-    isPaused,
-    gameTime,
-    restartGame,
-  } = useGameStore();
+  const { resources, heroes, buildings, enemies, isPaused, gameTime, restartGame } = useGameStore();
   const [showStats, setShowStats] = useState(false);
   const [resourceChanges, setResourceChanges] = useState<{
     [key: string]: number;
@@ -22,23 +14,23 @@ const TopBar: React.FC = () => {
     const prevGold = resourceChanges.gold || 0;
     const goldChange = resources.gold - prevGold;
     if (prevGold > 0 && goldChange !== 0) {
-      setResourceChanges((prev) => ({
+      setResourceChanges(prev => ({
         ...prev,
         goldChange,
         gold: resources.gold,
       }));
       setTimeout(() => {
-        setResourceChanges((prev) => ({ ...prev, goldChange: 0 }));
+        setResourceChanges(prev => ({ ...prev, goldChange: 0 }));
       }, 1000);
     } else {
-      setResourceChanges((prev) => ({ ...prev, gold: resources.gold }));
+      setResourceChanges(prev => ({ ...prev, gold: resources.gold }));
     }
   }, [resources.gold, resourceChanges.gold]);
 
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60000);
     const seconds = Math.floor((time % 60000) / 1000);
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
   return (
@@ -58,9 +50,7 @@ const TopBar: React.FC = () => {
                 className="bg-orange-100 px-3 py-1 rounded-full flex items-center gap-2"
               >
                 <span className="text-orange-500">⏸️</span>
-                <span className="text-orange-700 font-medium text-sm">
-                  GAME PAUSED
-                </span>
+                <span className="text-orange-700 font-medium text-sm">GAME PAUSED</span>
               </motion.div>
             )}
           </div>
@@ -70,14 +60,12 @@ const TopBar: React.FC = () => {
               onClick={() => setShowStats(!showStats)}
               className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition-colors"
             >
-              📊 {showStats ? "Hide" : "Stats"}
+              📊 {showStats ? 'Hide' : 'Stats'}
             </button>
             <button
               onClick={() => {
                 if (
-                  confirm(
-                    "Are you sure you want to restart the game? All progress will be lost.",
-                  )
+                  confirm('Are you sure you want to restart the game? All progress will be lost.')
                 ) {
                   restartGame();
                 }
@@ -93,66 +81,61 @@ const TopBar: React.FC = () => {
         <div className="resource-display flex gap-4 justify-center flex-wrap">
           {[
             {
-              key: "gold",
-              icon: "💰",
+              key: 'gold',
+              icon: '💰',
               value: resources.gold,
-              color: "yellow",
+              color: 'yellow',
               max: null,
             },
             {
-              key: "mana",
-              icon: "🔮",
+              key: 'mana',
+              icon: '🔮',
               value: resources.mana,
-              color: "blue",
+              color: 'blue',
               max: null,
             },
             {
-              key: "supplies",
-              icon: "📦",
+              key: 'supplies',
+              icon: '📦',
               value: resources.supplies,
-              color: "green",
+              color: 'green',
               max: null,
             },
             {
-              key: "population",
-              icon: "👥",
+              key: 'population',
+              icon: '👥',
               value: resources.population,
-              color: "purple",
+              color: 'purple',
               max: resources.maxPopulation,
             },
-          ].map((resource) => (
+          ].map(resource => (
             <motion.div
               key={resource.key}
               className={`stat-item bg-${resource.color}-50 border border-${resource.color}-200 rounded-lg px-4 py-3 min-w-32`}
               whileHover={{ scale: 1.02 }}
             >
               <div className="flex items-center gap-2 mb-1">
-                <span
-                  className={`stat-icon text-${resource.color}-500 text-xl`}
-                >
+                <span className={`stat-icon text-${resource.color}-500 text-xl`}>
                   {resource.icon}
                 </span>
                 <span className="stat-label font-medium text-sm capitalize text-gray-700">
                   {resource.key}:
                 </span>
               </div>
-              <div
-                className={`stat-value text-xl font-bold text-${resource.color}-700 relative`}
-              >
+              <div className={`stat-value text-xl font-bold text-${resource.color}-700 relative`}>
                 {Math.floor(resource.value)}
                 {resource.max !== null && `/${resource.max}`}
                 <AnimatePresence>
-                  {resource.key === "gold" &&
-                    resourceChanges.goldChange > 0 && (
-                      <motion.span
-                        initial={{ opacity: 0, y: 0 }}
-                        animate={{ opacity: 1, y: -10 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        className="absolute ml-2 text-green-500 text-sm font-medium"
-                      >
-                        +{Math.floor(resourceChanges.goldChange)}
-                      </motion.span>
-                    )}
+                  {resource.key === 'gold' && resourceChanges.goldChange > 0 && (
+                    <motion.span
+                      initial={{ opacity: 0, y: 0 }}
+                      animate={{ opacity: 1, y: -10 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      className="absolute ml-2 text-green-500 text-sm font-medium"
+                    >
+                      +{Math.floor(resourceChanges.goldChange)}
+                    </motion.span>
+                  )}
                 </AnimatePresence>
               </div>
               {/* Resource bar for population */}
@@ -175,7 +158,7 @@ const TopBar: React.FC = () => {
           {showStats && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
+              animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden"
             >
@@ -183,9 +166,7 @@ const TopBar: React.FC = () => {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   <div className="stat-item bg-white rounded-lg p-3 flex flex-col items-center">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="stat-icon text-blue-500 text-lg">
-                        🦸
-                      </span>
+                      <span className="stat-icon text-blue-500 text-lg">🦸</span>
                       <span className="stat-label font-medium">Heroes</span>
                     </div>
                     <span className="stat-value text-2xl font-bold text-blue-600">
@@ -193,20 +174,15 @@ const TopBar: React.FC = () => {
                     </span>
                     {heroes.length > 0 && (
                       <div className="text-xs text-gray-500 mt-1">
-                        Avg Level:{" "}
-                        {Math.round(
-                          heroes.reduce((sum, h) => sum + h.level, 0) /
-                            heroes.length,
-                        )}
+                        Avg Level:{' '}
+                        {Math.round(heroes.reduce((sum, h) => sum + h.level, 0) / heroes.length)}
                       </div>
                     )}
                   </div>
 
                   <div className="stat-item bg-white rounded-lg p-3 flex flex-col items-center">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="stat-icon text-amber-500 text-lg">
-                        🏠
-                      </span>
+                      <span className="stat-icon text-amber-500 text-lg">🏠</span>
                       <span className="stat-label font-medium">Buildings</span>
                     </div>
                     <span className="stat-value text-2xl font-bold text-amber-600">
@@ -214,10 +190,7 @@ const TopBar: React.FC = () => {
                     </span>
                     <div className="text-xs text-gray-500 mt-1">
                       Total Income: +
-                      {buildings.reduce(
-                        (sum, b) => sum + (b.production.gold || 0),
-                        0,
-                      )}
+                      {buildings.reduce((sum, b) => sum + (b.production.gold || 0), 0)}
                       /min
                     </div>
                   </div>
@@ -230,10 +203,10 @@ const TopBar: React.FC = () => {
                     <span
                       className={`stat-value text-2xl font-bold ${
                         enemies.length === 0
-                          ? "text-green-600"
+                          ? 'text-green-600'
                           : enemies.length < 3
-                            ? "text-yellow-600"
-                            : "text-red-600"
+                            ? 'text-yellow-600'
+                            : 'text-red-600'
                       }`}
                     >
                       {enemies.length}
@@ -241,33 +214,29 @@ const TopBar: React.FC = () => {
                     <div
                       className={`text-xs mt-1 ${
                         enemies.length === 0
-                          ? "text-green-500"
+                          ? 'text-green-500'
                           : enemies.length < 3
-                            ? "text-yellow-500"
-                            : "text-red-500"
+                            ? 'text-yellow-500'
+                            : 'text-red-500'
                       }`}
                     >
                       {enemies.length === 0
-                        ? "Safe"
+                        ? 'Safe'
                         : enemies.length < 3
-                          ? "Minor Threat"
-                          : "Under Attack!"}
+                          ? 'Minor Threat'
+                          : 'Under Attack!'}
                     </div>
                   </div>
 
                   <div className="stat-item bg-white rounded-lg p-3 flex flex-col items-center">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="stat-icon text-gray-500 text-lg">
-                        ⏰
-                      </span>
+                      <span className="stat-icon text-gray-500 text-lg">⏰</span>
                       <span className="stat-label font-medium">Time</span>
                     </div>
                     <span className="stat-value text-2xl font-bold text-gray-600">
                       {formatTime(gameTime)}
                     </span>
-                    <div className="text-xs text-gray-500 mt-1">
-                      Session Time
-                    </div>
+                    <div className="text-xs text-gray-500 mt-1">Session Time</div>
                   </div>
                 </div>
               </div>

@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import type { Building, Hero, Enemy, Flag } from "../types/game";
+import { create } from 'zustand';
+import type { Building, Hero, Enemy, Flag } from '../types/game';
 
 interface UIState {
   selectedBuildingType: string | null;
@@ -12,7 +12,7 @@ interface UIState {
   gameMessages: Array<{
     id: string;
     text: string;
-    type: "success" | "error" | "info";
+    type: 'success' | 'error' | 'info';
   }>;
   messageIdCounter: number;
 }
@@ -23,7 +23,7 @@ interface UIActions {
   cancelSelection: () => void;
   selectEntity: (entity: Building | Hero | Enemy | Flag, type: string) => void;
   setShowGameOverModal: (show: boolean) => void;
-  addGameMessage: (text: string, type?: "success" | "error" | "info") => void;
+  addGameMessage: (text: string, type?: 'success' | 'error' | 'info') => void;
   removeGameMessage: (id: string) => void;
   clearGameMessages: () => void;
 }
@@ -40,7 +40,7 @@ export const useUIStore = create<UIStore>((set, get) => ({
   messageIdCounter: 0,
 
   // Actions
-  selectBuildingType: (type) => {
+  selectBuildingType: type => {
     set({
       selectedBuildingType: type,
       selectedFlagType: null,
@@ -48,7 +48,7 @@ export const useUIStore = create<UIStore>((set, get) => ({
     });
   },
 
-  selectFlagType: (type) => {
+  selectFlagType: type => {
     set({
       selectedFlagType: type,
       selectedBuildingType: null,
@@ -67,15 +67,15 @@ export const useUIStore = create<UIStore>((set, get) => ({
     set({ selectedEntity: { entity, type } });
   },
 
-  setShowGameOverModal: (show) => {
+  setShowGameOverModal: show => {
     set({ showGameOverModal: show });
   },
 
-  addGameMessage: (text, type = "info") => {
+  addGameMessage: (text, type = 'info') => {
     const state = get();
     const id = `${Date.now()}-${state.messageIdCounter}`;
     const message = { id, text, type };
-    set((prevState) => ({
+    set(prevState => ({
       gameMessages: [...prevState.gameMessages, message],
       messageIdCounter: prevState.messageIdCounter + 1,
     }));
@@ -86,9 +86,9 @@ export const useUIStore = create<UIStore>((set, get) => ({
     }, 4000);
   },
 
-  removeGameMessage: (id) => {
-    set((state) => ({
-      gameMessages: state.gameMessages.filter((msg) => msg.id !== id),
+  removeGameMessage: id => {
+    set(state => ({
+      gameMessages: state.gameMessages.filter(msg => msg.id !== id),
     }));
   },
 
