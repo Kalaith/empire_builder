@@ -1,0 +1,438 @@
+{
+    "metadata":  {
+                     "name":  "empire_builder_game_improvement",
+                     "version":  "1.0.0",
+                     "generated_at":  "2026-02-22",
+                     "framework":  "WebHatchery Quest Board Planning Guide"
+                 },
+    "habitat":  {
+                    "slug":  "empire_builder",
+                    "project_path":  "game_apps/empire_builder/frontend/",
+                    "project_title":  "Empire Builder"
+                },
+    "season":  {
+                   "name":  "Season 1: Major Improvement Campaign",
+                   "slug":  "season-1",
+                   "starts_at":  "2026-02-24",
+                   "ends_at":  "2026-04-18",
+                   "is_active":  true,
+                   "path_chosen":  "feature-depth"
+               },
+    "outcome_brief":  {
+                          "statement":  "Empire growth is driven by smart heroes, resilient trade networks, and strategic warfare choices.",
+                          "deadline":  "2026-04-07"
+                      },
+    "major_update":  {
+                         "slug":  "strategic-depth-expansion",
+                         "name":  "Major Update: Strategic Depth Expansion",
+                         "description":  "Expand hero decision systems, economic trade simulation, diplomacy, and military operations.",
+                         "outcome_statement":  "Empire growth is driven by smart heroes, resilient trade networks, and strategic warfare choices.",
+                         "deadline":  "2026-04-07"
+                     },
+    "quest_chains":  [
+                         {
+                             "slug":  "empire_builder-strategic-depth-core",
+                             "name":  "Empire Builder: Strategic Depth Core",
+                             "description":  "Implementation and stabilization chain for hero AI, economy, diplomacy, and warfare upgrades.",
+                             "labels":  [
+                                            "type:quest",
+                                            "chain:feature-depth"
+                                        ],
+                             "reward_xp":  340,
+                             "reward_badge_slug":  "major-update-forger",
+                             "reward_title":  "Major Update Forger",
+                             "is_active":  true,
+                             "steps":  [
+                                           {
+                                               "id":  "Q1",
+                                               "type":  "Quest",
+                                               "title":  "Establish Hero AI and Kingdom Baseline",
+                                               "description":  "Define baseline metrics for hero behavior, loyalty, and kingdom decision outcomes.",
+                                               "rank_required":  "Iron",
+                                               "quest_level":  3,
+                                               "dependency_type":  "Independent",
+                                               "depends_on":  [
+
+                                                              ],
+                                               "unlock_condition":  "n/a",
+                                               "goal":  "Create a reliable baseline for intelligent hero and kingdom simulation changes.",
+                                               "player_steps":  [
+                                                                    "Document current hero AI behavior, needs flags, and loyalty triggers.",
+                                                                    "Map decision modules for heroes, court actions, and kingdom responses.",
+                                                                    "Capture risk areas for AI loops, save integrity, and balancing."
+                                                                ],
+                                               "done_when":  [
+                                                                 "Hero behavior baseline report is published.",
+                                                                 "AI decision KPIs and targets are approved.",
+                                                                 "Risk register covers AI stability and exploit scenarios."
+                                                             ],
+                                               "due_date":  "2026-03-06",
+                                               "proof_required":  [
+                                                                      "proof:pr",
+                                                                      "proof:metric-delta"
+                                                                  ],
+                                               "class_fantasy":  "Rune Scribe",
+                                               "class":  "doc-sage",
+                                               "difficulty":  3,
+                                               "xp":  60,
+                                               "labels":  [
+                                                              "type:quest",
+                                                              "difficulty:3",
+                                                              "class:doc-sage",
+                                                              "xp:60",
+                                                              "chain:feature-depth"
+                                                          ]
+                                           },
+                                           {
+                                               "id":  "Q2",
+                                               "type":  "Quest",
+                                               "title":  "Implement Resource Chains and Trade Routes",
+                                               "description":  "Build production dependencies, merchant caravans, and dynamic pricing foundations.",
+                                               "rank_required":  "Iron",
+                                               "quest_level":  4,
+                                               "dependency_type":  "Chained",
+                                               "depends_on":  [
+                                                                  "Q1"
+                                                              ],
+                                               "unlock_condition":  "Q1 complete.",
+                                               "goal":  "Deliver a testable economic loop with supply, demand, and trade flow pressure.",
+                                               "player_steps":  [
+                                                                    "Implement inter-building production chains with input and output dependencies.",
+                                                                    "Add trade route setup with route risk, travel time, and delivery resolution.",
+                                                                    "Implement dynamic pricing hooks based on supply, demand, and scarcity."
+                                                                ],
+                                               "done_when":  [
+                                                                 "Production chains run end-to-end with no deadlock states.",
+                                                                 "Trade routes execute and update inventories correctly.",
+                                                                 "Economic unit tests pass in CI for normal and scarcity cases."
+                                                             ],
+                                               "due_date":  "2026-03-14",
+                                               "proof_required":  [
+                                                                      "proof:pr",
+                                                                      "proof:test-output"
+                                                                  ],
+                                               "class_fantasy":  "Aether Smith",
+                                               "class":  "feature-smith",
+                                               "difficulty":  4,
+                                               "xp":  80,
+                                               "labels":  [
+                                                              "type:quest",
+                                                              "difficulty:4",
+                                                              "class:feature-smith",
+                                                              "xp:80",
+                                                              "chain:feature-depth"
+                                                          ]
+                                           },
+                                           {
+                                               "id":  "Q3",
+                                               "type":  "Quest",
+                                               "title":  "Ship Military Formations and Siege UX",
+                                               "description":  "Expose tactical formations, fortification states, and siege progress clearly.",
+                                               "rank_required":  "Iron",
+                                               "quest_level":  3,
+                                               "dependency_type":  "Chained",
+                                               "depends_on":  [
+                                                                  "Q2"
+                                                              ],
+                                               "unlock_condition":  "Q2 complete.",
+                                               "goal":  "Players can plan military actions with clear tactical and siege feedback.",
+                                               "player_steps":  [
+                                                                    "Implement formation selection and tactical positioning panels.",
+                                                                    "Add siege status UI for walls, equipment, and defender morale.",
+                                                                    "Provide clear error and blocked-action feedback for invalid tactics."
+                                                                ],
+                                               "done_when":  [
+                                                                 "Formation and siege screens support primary military flows.",
+                                                                 "Blocked actions provide clear guidance and recovery options.",
+                                                                 "UX checks pass for readability and responsiveness."
+                                                             ],
+                                               "due_date":  "2026-03-22",
+                                               "proof_required":  [
+                                                                      "proof:pr",
+                                                                      "proof:screenshot",
+                                                                      "proof:test-output"
+                                                                  ],
+                                               "class_fantasy":  "Cogwheel Alchemist",
+                                               "class":  "ux-alchemist",
+                                               "difficulty":  3,
+                                               "xp":  60,
+                                               "labels":  [
+                                                              "type:quest",
+                                                              "difficulty:3",
+                                                              "class:ux-alchemist",
+                                                              "xp:60",
+                                                              "chain:feature-depth"
+                                                          ]
+                                           },
+                                           {
+                                               "id":  "Q4",
+                                               "type":  "Quest",
+                                               "title":  "Implement Diplomacy and Alliance Systems",
+                                               "description":  "Add AI kingdom diplomacy, alliance agreements, and negotiation outcomes.",
+                                               "rank_required":  "Iron",
+                                               "quest_level":  3,
+                                               "dependency_type":  "Chained",
+                                               "depends_on":  [
+                                                                  "Q2",
+                                                                  "Q3"
+                                                              ],
+                                               "unlock_condition":  "Q2 and Q3 complete.",
+                                               "goal":  "Create meaningful diplomatic strategy beyond direct conquest.",
+                                               "player_steps":  [
+                                                                    "Implement diplomatic stance states and relationship drift rules.",
+                                                                    "Add alliance treaties for trade, defense, and shared goals.",
+                                                                    "Integrate negotiation outcomes with warfare risk and economic access."
+                                                                ],
+                                               "done_when":  [
+                                                                 "AI kingdoms can form, maintain, and break alliances with reasons.",
+                                                                 "Diplomatic outcomes alter trade access and conflict likelihood.",
+                                                                 "Scenario tests validate peaceful and hostile campaign paths."
+                                                             ],
+                                               "due_date":  "2026-03-30",
+                                               "proof_required":  [
+                                                                      "proof:pr",
+                                                                      "proof:metric-delta",
+                                                                      "proof:test-output"
+                                                                  ],
+                                               "class_fantasy":  "Arcane Examiner",
+                                               "class":  "test-summoner",
+                                               "difficulty":  3,
+                                               "xp":  60,
+                                               "labels":  [
+                                                              "type:quest",
+                                                              "difficulty:3",
+                                                              "class:test-summoner",
+                                                              "xp:60",
+                                                              "chain:feature-depth"
+                                                          ]
+                                           },
+                                           {
+                                               "id":  "Q5",
+                                               "type":  "Quest",
+                                               "title":  "Balance Kingdom AI and Multi-Path Victory",
+                                               "description":  "Stabilize AI strategy quality and validate economic, military, and diplomatic win paths.",
+                                               "rank_required":  "Iron",
+                                               "quest_level":  4,
+                                               "dependency_type":  "Chained",
+                                               "depends_on":  [
+                                                                  "Q3",
+                                                                  "Q4"
+                                                              ],
+                                               "unlock_condition":  "Q3 and Q4 complete.",
+                                               "goal":  "Ensure the expanded strategy systems are stable, fair, and release ready.",
+                                               "player_steps":  [
+                                                                    "Run long-horizon simulations across multiple AI kingdom archetypes.",
+                                                                    "Tune AI weighting for economy growth, military aggression, and diplomacy.",
+                                                                    "Validate victory conditions for cultural, economic, military, and diplomatic paths."
+                                                                ],
+                                               "done_when":  [
+                                                                 "Campaign simulation suite gates CI with stable outcomes.",
+                                                                 "No dominant exploit strategy remains in the release candidate.",
+                                                                 "Release checklist and rollback rehearsal are approved."
+                                                             ],
+                                               "due_date":  "2026-04-07",
+                                               "proof_required":  [
+                                                                      "proof:pr",
+                                                                      "proof:test-output",
+                                                                      "proof:metric-delta",
+                                                                      "proof:postmortem"
+                                                                  ],
+                                               "class_fantasy":  "Iron Warden",
+                                               "class":  "ops-ranger",
+                                               "difficulty":  4,
+                                               "xp":  80,
+                                               "labels":  [
+                                                              "type:quest",
+                                                              "difficulty:4",
+                                                              "class:ops-ranger",
+                                                              "xp:80",
+                                                              "chain:feature-depth"
+                                                          ]
+                                           }
+                                       ]
+                         },
+                         {
+                             "slug":  "empire_builder-small-improvements",
+                             "name":  "System: Small Improvements",
+                             "description":  "Incremental quality improvements for kingdom management, turn flow, and reliability.",
+                             "labels":  [
+                                            "type:quest",
+                                            "chain:small-improvements"
+                                        ],
+                             "reward_xp":  140,
+                             "reward_badge_slug":  "steady-refiner",
+                             "reward_title":  "Steady Refiner",
+                             "is_active":  true,
+                             "steps":  [
+                                           {
+                                               "id":  "SI1",
+                                               "type":  "Quest",
+                                               "title":  "Polish Kingdom Dashboard Feedback",
+                                               "description":  "Improve clarity for economy, morale, military readiness, and diplomacy state changes.",
+                                               "rank_required":  "Iron",
+                                               "quest_level":  2,
+                                               "dependency_type":  "Independent",
+                                               "depends_on":  [
+
+                                                              ],
+                                               "unlock_condition":  "n/a",
+                                               "goal":  "Reduce confusion in high-frequency kingdom management decisions.",
+                                               "player_steps":  [
+                                                                    "Audit kingdom dashboard, diplomacy, and trade screens for unclear states.",
+                                                                    "Add concise state copy for shortages, unrest, and alliance changes.",
+                                                                    "Add recoverable actions for failed commands and stale data."
+                                                                ],
+                                               "done_when":  [
+                                                                 "Core kingdom screens render explicit state transitions.",
+                                                                 "Critical error states provide clear recovery actions.",
+                                                                 "UI review sign-off is recorded."
+                                                             ],
+                                               "due_date":  "2026-03-06",
+                                               "proof_required":  [
+                                                                      "proof:pr",
+                                                                      "proof:screenshot"
+                                                                  ],
+                                               "class_fantasy":  "Cogwheel Alchemist",
+                                               "class":  "ux-alchemist",
+                                               "difficulty":  2,
+                                               "xp":  40,
+                                               "labels":  [
+                                                              "type:quest",
+                                                              "difficulty:2",
+                                                              "class:ux-alchemist",
+                                                              "xp:40",
+                                                              "chain:small-improvements"
+                                                          ]
+                                           },
+                                           {
+                                               "id":  "SI2",
+                                               "type":  "Quest",
+                                               "title":  "Optimize Turn Simulation Hotspots",
+                                               "description":  "Address AI turn resolution and pathfinding bottlenecks in late-game states.",
+                                               "rank_required":  "Silver",
+                                               "quest_level":  2,
+                                               "dependency_type":  "Chained",
+                                               "depends_on":  [
+                                                                  "SI1"
+                                                              ],
+                                               "unlock_condition":  "SI1 complete.",
+                                               "goal":  "Improve turn responsiveness as kingdom scale and unit counts increase.",
+                                               "player_steps":  [
+                                                                    "Capture baseline timings for AI turns, route updates, and battle resolution.",
+                                                                    "Optimize top 2-3 hotspots with low-risk data and logic improvements.",
+                                                                    "Verify deterministic outcomes after optimization changes."
+                                                                ],
+                                               "done_when":  [
+                                                                 "Target turn flows show measurable latency improvements.",
+                                                                 "No P1/P2 regressions are introduced.",
+                                                                 "Performance deltas and tradeoffs are documented."
+                                                             ],
+                                               "due_date":  "2026-03-14",
+                                               "proof_required":  [
+                                                                      "proof:pr",
+                                                                      "proof:test-output",
+                                                                      "proof:metric-delta"
+                                                                  ],
+                                               "class_fantasy":  "Aether Smith",
+                                               "class":  "feature-smith",
+                                               "difficulty":  2,
+                                               "xp":  40,
+                                               "labels":  [
+                                                              "type:quest",
+                                                              "difficulty:2",
+                                                              "class:feature-smith",
+                                                              "xp:40",
+                                                              "chain:small-improvements"
+                                                          ]
+                                           },
+                                           {
+                                               "id":  "SI3",
+                                               "type":  "Quest",
+                                               "title":  "Add Save and Event Reliability Guards",
+                                               "description":  "Add validation and fallback handling for save data, event queues, and diplomacy state edges.",
+                                               "rank_required":  "Silver",
+                                               "quest_level":  3,
+                                               "dependency_type":  "Chained",
+                                               "depends_on":  [
+                                                                  "SI2"
+                                                              ],
+                                               "unlock_condition":  "SI2 complete.",
+                                               "goal":  "Lower minor failure rates in long campaigns without major architecture changes.",
+                                               "player_steps":  [
+                                                                    "Identify common failures in long-turn simulations and reload sequences.",
+                                                                    "Add validation and fallback handling for malformed saves and stale events.",
+                                                                    "Add focused tests for each new guard and recovery path."
+                                                                ],
+                                               "done_when":  [
+                                                                 "Guard checks block known minor campaign failure cases.",
+                                                                 "Fallback paths preserve user progress and campaign continuity.",
+                                                                 "Focused reliability tests pass in CI."
+                                                             ],
+                                               "due_date":  "2026-03-22",
+                                               "proof_required":  [
+                                                                      "proof:pr",
+                                                                      "proof:test-output",
+                                                                      "proof:metric-delta"
+                                                                  ],
+                                               "class_fantasy":  "Iron Warden",
+                                               "class":  "ops-ranger",
+                                               "difficulty":  3,
+                                               "xp":  60,
+                                               "labels":  [
+                                                              "type:quest",
+                                                              "difficulty:3",
+                                                              "class:ops-ranger",
+                                                              "xp:60",
+                                                              "chain:small-improvements"
+                                                          ]
+                                           }
+                                       ]
+                         }
+                     ],
+    "bosses":  [
+                   {
+                       "id":  "B1",
+                       "name":  "Fractured Crown Convergence",
+                       "description":  "Primary systemic risk threatening Empire Builder\u0027s strategy-depth expansion release.",
+                       "threat_type":  "ai strategy instability",
+                       "threat_level":  4,
+                       "status":  "active",
+                       "deadline":  "2026-04-07",
+                       "risk_level":  "high",
+                       "rollback_plan":  "Disable the new feature flag set, restore previous stable configs, and replay verification checks.",
+                       "labels":  [
+                                      "type:boss",
+                                      "difficulty:4",
+                                      "class:ops-ranger",
+                                      "xp:80",
+                                      "boss:active",
+                                      "chain:feature-depth"
+                                  ],
+                       "kill_criteria":  [
+                                             "Full regression suite passes in CI.",
+                                             "No P1/P2 incidents remain open for 48h in staging."
+                                         ],
+                       "hp_total":  8,
+                       "hp_current":  8,
+                       "hp_tasks":  [
+                                        "HP1: Hero AI baseline and KPIs documented",
+                                        "HP2: Trade and pricing guards enabled",
+                                        "HP3: Military and siege integration tests added",
+                                        "HP4: Diplomacy and alliance telemetry live",
+                                        "HP5: AI strategy weights tuned",
+                                        "HP6: Long-campaign soak test complete",
+                                        "HP7: Rollback drill completed",
+                                        "HP8: Final readiness sign-off"
+                                    ],
+                       "proof_required":  [
+                                              "proof:pr",
+                                              "proof:test-output",
+                                              "proof:metric-delta",
+                                              "proof:postmortem"
+                                          ]
+                   }
+               ]
+,
+  "raids": []
+}
+
