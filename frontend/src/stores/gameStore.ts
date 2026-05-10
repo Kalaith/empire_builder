@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { webhatcheryGameApi, type WebHatcheryGameState } from '../api/webhatcheryGameApi';
 import type {
   GameState,
   Building,
@@ -17,6 +18,7 @@ import type {
   CombatRecord,
   HeroRelationship,
 } from '../types/game';
+import { useWebHatcherySessionStore } from './webhatcherySessionStore';
 import {
   buildingTypes,
   heroClasses,
@@ -122,6 +124,7 @@ interface GameStore extends GameState {
   pauseGame: () => void;
   resumeGame: () => void;
   updateStatistics: (updates: Partial<GameStatistics>) => void;
+  loadBackendState: () => Promise<void>;
 }
 
 const createInitialGrid = (): GridCell[][] => {
@@ -186,10 +189,64 @@ const createInitialState = (): GameState => ({
   statistics: createInitialStatistics(),
 });
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
+
+const loadOrCreateBackendGame = async (): Promise<WebHatcheryGameState> => {
+  const sessionStore = useWebHatcherySessionStore.getState();
+  try {
+    return await sessionStore.loadGame();
+  } catch {
+    return sessionStore.continueAsGuest();
+  }
+};
+
+const syncSessionState = (gameState: WebHatcheryGameState): void => {
+  useWebHatcherySessionStore.setState({
+    gameState,
+    user: gameState.user,
+    isLoading: false,
+    error: null,
+  });
+};
+
+const toBackendState = (state: GameStore): GameState => ({
+  resources: state.resources,
+  gridWidth: state.gridWidth,
+  gridHeight: state.gridHeight,
+  grid: state.grid,
+  buildings: state.buildings,
+  heroes: state.heroes,
+  enemies: state.enemies,
+  flags: state.flags,
+  quests: state.quests,
+  achievements: state.achievements,
+  activeEvents: state.activeEvents,
+  gameTime: state.gameTime,
+  isGameOver: state.isGameOver,
+  isPaused: state.isPaused,
+  difficulty: state.difficulty,
+  nextHeroId: state.nextHeroId,
+  nextEnemyId: state.nextEnemyId,
+  nextQuestId: state.nextQuestId,
+  statistics: state.statistics,
+});
+
 export const useGameStore = create<GameStore>()(
   persist(
     (set, get) => ({
       ...createInitialState(),
+
+      loadBackendState: async () => {
+        const gameState = await loadOrCreateBackendGame();
+        syncSessionState(gameState);
+        const backendState = gameState.save.state;
+        if (!isRecord(backendState) || !isRecord(backendState.gameState)) {
+          return;
+        }
+
+        set(backendState.gameState as unknown as GameState);
+      },
 
       initializeGrid: () => {
         set({ grid: createInitialGrid() });
@@ -1154,3 +1211,40 @@ export const useGameStore = create<GameStore>()(
     }
   )
 );
+
+let backendSyncTimer: ReturnType<typeof setTimeout> | null = null;
+
+const syncBackendIntent = (intent: string): void => {
+  if (backendSyncTimer) {
+    clearTimeout(backendSyncTimer);
+  }
+
+  backendSyncTimer = setTimeout(() => {
+    const state = useGameStore.getState();
+    void webhatcheryGameApi
+      .applyIntent(intent, { state: toBackendState(state) as unknown as Record<string, unknown> })
+      .then(syncSessionState)
+      .catch(() => undefined);
+  }, 250);
+};
+
+useGameStore.subscribe((state, previousState) => {
+  if (
+    state.resources === previousState.resources &&
+    state.grid === previousState.grid &&
+    state.buildings === previousState.buildings &&
+    state.heroes === previousState.heroes &&
+    state.enemies === previousState.enemies &&
+    state.flags === previousState.flags &&
+    state.quests === previousState.quests &&
+    state.achievements === previousState.achievements &&
+    state.activeEvents === previousState.activeEvents &&
+    state.gameTime === previousState.gameTime &&
+    state.isGameOver === previousState.isGameOver &&
+    state.isPaused === previousState.isPaused
+  ) {
+    return;
+  }
+
+  syncBackendIntent('state_updated');
+});

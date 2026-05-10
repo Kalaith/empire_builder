@@ -11,7 +11,8 @@ import GameOverModal from './components/ui/GameOverModal';
 import { gameConfig } from './data/gameData';
 
 const App: React.FC = () => {
-  const { initializeGrid, placeCastle, collectIncome, spawnEnemy, isGameRunning } = useGameStore();
+  const { initializeGrid, placeCastle, collectIncome, spawnEnemy, isGameRunning, loadBackendState } =
+    useGameStore();
   const { addGameMessage } = useUIStore();
 
   // Use the game loop hook
@@ -19,10 +20,15 @@ const App: React.FC = () => {
 
   // Initialize game on mount
   useEffect(() => {
-    initializeGrid();
-    placeCastle();
-    addGameMessage('Welcome to your kingdom! Build guilds to recruit heroes.', 'success');
-  }, [initializeGrid, placeCastle, addGameMessage]);
+    void (async () => {
+      await loadBackendState();
+      if (useGameStore.getState().buildings.length === 0) {
+        initializeGrid();
+        placeCastle();
+      }
+      addGameMessage('Welcome to your kingdom! Build guilds to recruit heroes.', 'success');
+    })();
+  }, [initializeGrid, placeCastle, addGameMessage, loadBackendState]);
 
   // Income collection loop
   useEffect(() => {
@@ -40,10 +46,7 @@ const App: React.FC = () => {
     if (!isGameRunning()) return;
 
     const enemyLoop = setInterval(() => {
-      if (Math.random() < 0.3) {
-        // 30% chance to spawn enemy every 5 seconds
-        spawnEnemy();
-      }
+      spawnEnemy();
     }, gameConfig.ENEMY_SPAWN_INTERVAL);
 
     return () => clearInterval(enemyLoop);
